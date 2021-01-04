@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/04 18:38:23 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/04 18:45:50 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ void			print_stacks(t_stack *stack_a, t_stack *stack_b)
 	while (i < max_size)
 	{
 		if ((int)(stack_a->size - max_size + i) >= 0)
-			printf("%d", stack_a->array[i]);
+			printf("%d", stack_a->array[stack_a->size - max_size + i]);
 		else
 			printf(" ");
 		printf(" ");
 		if ((int)(stack_b->size - max_size + i) >= 0)
-			printf("%d", stack_b->array[i]);
+			printf("%d", stack_b->array[stack_b->size - max_size + i]);
 		else
 			printf(" ");
 		printf("\n");
@@ -153,6 +153,7 @@ int				main(int argc, char *argv[])
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
+	printf("%zu\n", stack_b.size);
 	print_instructions(instructions);
 	print_stacks(&stack_a, &stack_b);
 	execute_instructions(instructions, &stack_a, &stack_b);
