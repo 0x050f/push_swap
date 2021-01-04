@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2020/12/28 16:05:12 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/04 17:15:02 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,9 @@ DIR_OBJS	=	./compiled_srcs/
 
 # FILES #
 
-SRC			=	checker.c
+SRC			=	checker.c \
+				operations.c \
+				instructions.c
 
 SRCS		=	$(SRC)
 
