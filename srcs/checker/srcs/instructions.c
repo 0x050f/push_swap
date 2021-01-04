@@ -6,11 +6,74 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/04 17:24:53 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/04 18:24:53 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "checker.h"
+
+int			ft_strcmp(const char *s1, const char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char		*ft_strdup(const char *str)
+{
+	int		i;
+	char	*pt;
+
+	i = 0;
+	while (str[i])
+		i++;
+	if (!(pt = malloc((i + 1) * sizeof(char))))
+		return (0);
+	i = -1;
+	while (str[++i])
+		pt[i] = str[i];
+	pt[i] = '\0';
+	return (pt);
+}
+
+// DEBUG
+#include <stdio.h>
+
+void		execute_instructions(t_instruction *instr,
+t_stack *stack_a, t_stack *stack_b)
+{
+	while (instr)
+	{
+		if (instr->line[0] == 's')
+		{
+			if (instr->line[1] == 'a' || instr->line[1] == 's')
+				swap_stack(stack_a);
+			if (instr->line[1] == 'b' || instr->line[1] == 's')
+				swap_stack(stack_b);
+		}
+		else if (ft_strcmp(instr->line, "pa"))
+			push_stack(stack_a, stack_b);
+		else if (ft_strcmp(instr->line, "pb"))
+			push_stack(stack_b, stack_a);
+		else if (instr->line[0] == 'r')
+		{
+			if (ft_strcmp(instr->line, "ra") || ft_strcmp(instr->line, "rr"))
+				rotate_stack(stack_a);
+			if (ft_strcmp(instr->line, "rb") || ft_strcmp(instr->line, "rr"))
+				rotate_stack(stack_b);
+			if (ft_strcmp(instr->line, "rra") || ft_strcmp(instr->line, "rrr"))
+				reverse_rotate_stack(stack_a);
+			if (ft_strcmp(instr->line, "rrb") || ft_strcmp(instr->line, "rrr"))
+				reverse_rotate_stack(stack_b);
+		}
+		printf("%s\n", instr->line);
+		print_stacks(stack_a, stack_b);
+		instr = instr->next;
+	}
+}
 
 /*
 ** Add instruction with line
@@ -22,7 +85,7 @@ int			add_instruction(t_instruction **instructions, char *line)
 
 	if (!(new = malloc(sizeof(t_instruction))))
 		return (1);
-	new->line = line;
+	new->line = ft_strdup(line);
 	new->next = NULL;
 	tmp = *instructions;
 	while (tmp && tmp->next)
@@ -48,15 +111,18 @@ int				get_instruction(t_instruction **instructions)
 		return (ret);
 	if (line[2] != '\n')
 	{
+		if (line[0] == '\n' || line[1] == '\n')
+			return (-1);
 		if (read(STDIN_FILENO, line + 3, 1) < 0 || line[3] != '\n')
 			return (-1);
 		line[3] = '\0';
 	}
 	else
 		line[2] = '\0';
-	if (line != "sa" && line != "sb" && line != "ss" && line != "pa" &&
-line != "pb" && line != "ra" && line != "rb" && line != "rr" && line != "rra" &&
-line != "rrb" && line != "rrr")
+	if (ft_strcmp(line, "sa") && ft_strcmp(line, "sb") &&
+ft_strcmp(line, "ss") && ft_strcmp(line, "pa") && ft_strcmp(line, "pb") &&
+ft_strcmp(line, "ra") && ft_strcmp(line, "rb") && ft_strcmp(line, "rr") &&
+ft_strcmp(line, "rra") && ft_strcmp(line, "rrb") && ft_strcmp(line, "rrr"))
 		return (-1);
 	if (add_instruction(instructions, line))
 		return (-1);

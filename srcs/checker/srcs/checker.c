@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/04 17:24:25 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/04 18:38:23 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,20 +16,38 @@
 
 #include <stdio.h>
 
-void			print_stack(t_stack *stack)
+void			print_stacks(t_stack *stack_a, t_stack *stack_b)
 {
 	size_t	i;
+	size_t  max_size;
 
+	max_size = stack_a->size;
+	if (stack_b->size > stack_a->size)
+		max_size = stack_b->size;
 	i = 0;
 	printf("TOP\n");
-	while (i < stack->size)
-		printf("%d\n", stack->array[i++]);
-	printf("BOTTOM\n");
+	while (i < max_size)
+	{
+		if ((int)(stack_a->size - max_size + i) >= 0)
+			printf("%d", stack_a->array[i]);
+		else
+			printf(" ");
+		printf(" ");
+		if ((int)(stack_b->size - max_size + i) >= 0)
+			printf("%d", stack_b->array[i]);
+		else
+			printf(" ");
+		printf("\n");
+		i++;
+	}
+	printf("_ _\n");
+	printf("a b\n");
 }
 
 void			print_instructions(t_instruction *instructions)
 {
-	while (instructions->next)
+	printf("INSTRUCTIONS\n");
+	while (instructions)
 	{
 		printf("%s\n", instructions->line);
 		instructions = instructions->next;
@@ -100,25 +118,23 @@ int				main(int argc, char *argv[])
 {
 	size_t	i;
 	int		num;
-	t_stack	*stack_a;
-	t_stack *stack_b;
+	t_stack	stack_a;
+	t_stack stack_b;
 
-	if (!(stack_a = malloc(sizeof(t_stack))) ||
-!(stack_b = malloc(sizeof(t_stack))) ||
-!(stack_a->array = malloc(sizeof(int) * (argc - 1))) ||
-!(stack_b->array = malloc(sizeof(int) * (argc - 1))))
+	if (!(stack_a.array = malloc(sizeof(int) * (argc - 1))) ||
+!(stack_b.array = malloc(sizeof(int) * (argc - 1))))
 	{
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
-	stack_a->size = 0;
-	stack_b->size = 0;
+	stack_a.size = 0;
+	stack_b.size = 0;
 	i = 1;
 	while (i < (size_t)argc && !(ft_atoi(argv[i], &num)) &&
-!(stack_contains(stack_a, num)))
+!(stack_contains(&stack_a, num)))
 	{
-		stack_a->array[i++ - 1] = num;
-		stack_a->size++;
+		stack_a.array[i++ - 1] = num;
+		stack_a.size++;
 	}
 	if (i != (size_t)argc)
 	{
@@ -138,7 +154,9 @@ int				main(int argc, char *argv[])
 		return (1);
 	}
 	print_instructions(instructions);
-	if (is_stack_ordered(stack_a))
+	print_stacks(&stack_a, &stack_b);
+	execute_instructions(instructions, &stack_a, &stack_b);
+	if (is_stack_ordered(&stack_a) || stack_b.size)
 		write(STDOUT_FILENO, "KO\n", 3);
 	else
 		write(STDOUT_FILENO, "OK\n", 3);
