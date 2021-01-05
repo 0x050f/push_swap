@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 13:18:58 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 01:35:03 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/05 03:04:44 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 /*
 ** Shift down all elements of the stack by 1. The last one become the first one.
 */
+
 void			reverse_rotate_stack(t_stack *stack)
 {
 	size_t	i;
@@ -36,6 +37,7 @@ void			reverse_rotate_stack(t_stack *stack)
 /*
 ** Shift up all elements of the stack by 1. The first one become the last one.
 */
+
 void			rotate_stack(t_stack *stack)
 {
 	size_t	i;
@@ -57,6 +59,7 @@ void			rotate_stack(t_stack *stack)
 /*
 ** Take the first element at the top of stack2 and put it at the top of stack1.
 */
+
 void			push_stack(t_stack *stack1, t_stack *stack2)
 {
 	if (stack2->size > 0)
@@ -72,6 +75,7 @@ void			push_stack(t_stack *stack1, t_stack *stack2)
 /*
 ** Swap the first two elements at the top of the stack
 */
+
 void			swap_stack(t_stack *stack)
 {
 	int tmp;

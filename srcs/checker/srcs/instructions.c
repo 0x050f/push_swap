@@ -6,44 +6,39 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 01:53:21 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/05 03:01:38 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "checker.h"
+
+/*
+** Choose that to do
+*/
 
 void		execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b)
 {
 	while (instr)
 	{
-		if (instr->line[0] == 's')
-		{
-			if (instr->line[1] == 'a' || instr->line[1] == 's')
-				swap_stack(stack_a);
-			if (instr->line[1] == 'b' || instr->line[1] == 's')
-				swap_stack(stack_b);
-		}
-		else if (!ft_strcmp(instr->line, "pa"))
+		if (!ft_strcmp(instr->line, "sa") || !ft_strcmp(instr->line, "ss"))
+			swap_stack(stack_a);
+		if (!ft_strcmp(instr->line, "sb") || !ft_strcmp(instr->line, "ss"))
+			swap_stack(stack_b);
+		if (!ft_strcmp(instr->line, "pa"))
 			push_stack(stack_a, stack_b);
-		else if (!ft_strcmp(instr->line, "pb"))
+		if (!ft_strcmp(instr->line, "pb"))
 			push_stack(stack_b, stack_a);
-		else if (instr->line[0] == 'r')
-		{
-			if (!ft_strcmp(instr->line, "ra") || !ft_strcmp(instr->line, "rr"))
-				rotate_stack(stack_a);
-			if (!ft_strcmp(instr->line, "rb") || !ft_strcmp(instr->line, "rr"))
-				rotate_stack(stack_b);
-			if (!ft_strcmp(instr->line, "rra") || !ft_strcmp(instr->line, "rrr"))
-				reverse_rotate_stack(stack_a);
-			if (!ft_strcmp(instr->line, "rrb") || !ft_strcmp(instr->line, "rrr"))
-				reverse_rotate_stack(stack_b);
-		}
+		if (!ft_strcmp(instr->line, "ra") || !ft_strcmp(instr->line, "rr"))
+			rotate_stack(stack_a);
+		if (!ft_strcmp(instr->line, "rb") || !ft_strcmp(instr->line, "rr"))
+			rotate_stack(stack_b);
+		if (!ft_strcmp(instr->line, "rra") || !ft_strcmp(instr->line, "rrr"))
+			reverse_rotate_stack(stack_a);
+		if (!ft_strcmp(instr->line, "rrb") || !ft_strcmp(instr->line, "rrr"))
+			reverse_rotate_stack(stack_b);
 		if (DEBUG)
-		{
-			print_instructions(instr);
-			print_stacks(stack_a, stack_b);
-		}
+			print_debug_instruction(instr, stack_a, stack_b);
 		instr = instr->next;
 	}
 }
@@ -51,6 +46,7 @@ t_stack *stack_a, t_stack *stack_b)
 /*
 ** Add instruction with line
 */
+
 int			add_instruction(t_instruction **instructions, char *line)
 {
 	t_instruction *tmp;
@@ -75,7 +71,8 @@ int			add_instruction(t_instruction **instructions, char *line)
 ** if no more input is available return 0, return negative number if fail and
 ** positive one otherwise
 */
-int				get_instruction(t_instruction **instructions)
+
+int			get_instruction(t_instruction **instructions)
 {
 	int		ret;
 	char	line[4];

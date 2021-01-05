@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 01:53:54 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/05 03:02:33 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char		*ft_strdup(const char *str)
 	return (pt);
 }
 
-size_t			ft_strlen(const char *s)
+size_t		ft_strlen(const char *s)
 {
 	const char *ptr;
 
@@ -49,7 +49,7 @@ size_t			ft_strlen(const char *s)
 	return (ptr - s);
 }
 
-void			ft_putnbr(int n)
+void		ft_putnbr(int n)
 {
 	char c;
 	long nnbr;
@@ -69,4 +69,30 @@ void			ft_putnbr(int n)
 	}
 	if (n == 0)
 		write(STDOUT_FILENO, "0", 1);
+}
+
+/*
+** atoi passing a pointer to the number in parameter and returning 1 if there is
+** an error (not a number or not a integer)
+*/
+
+int			ft_atoi(const char *str, int *num)
+{
+	char	*ptr;
+	long	nbr;
+	int		sign;
+	size_t	i;
+
+	ptr = (char *)str;
+	nbr = 0;
+	sign = 1;
+	if (*ptr == '-' && ptr++)
+		sign *= -1;
+	i = 0;
+	while (*ptr >= '0' && *ptr <= '9' && i++ < 9)
+		nbr = nbr * 10 + *ptr++ - '0';
+	if (*ptr != '\0' || nbr > 2147483647 || nbr < -2147483648)
+		return (1);
+	*num = nbr * sign;
+	return (0);
 }
