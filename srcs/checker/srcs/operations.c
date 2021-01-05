@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 13:18:58 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/04 18:43:31 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/05 01:35:03 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,17 @@ void			rotate_stack(t_stack *stack)
 	}
 }
 
-// DEBUG
-#include <stdio.h>
 /*
 ** Take the first element at the top of stack2 and put it at the top of stack1.
 */
 void			push_stack(t_stack *stack1, t_stack *stack2)
 {
-	printf("%zu\n", stack2->size);
 	if (stack2->size > 0)
 	{
 		stack1->size++;
-		rotate_stack(stack1);
+		reverse_rotate_stack(stack1);
 		stack1->array[0] = stack2->array[0];
+		rotate_stack(stack2);
 		stack2->size--;
 	}
 }

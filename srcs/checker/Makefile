@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/04 17:15:02 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/05 02:08:24 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,14 @@ _IWHITE		=	\x1b[47m
 
 # **************************************************************************** #
 
+# NORMINETTE #
+
+NORMINETTE	:=	$(shell which norminette)
+
+ifeq ($$?, 1)
+	NORMINETTE := ${HOME}/.norminette/norminette.rb
+endif
+
 ## VARIABLES ##
 
 # COMPILATION #
@@ -69,7 +77,9 @@ DIR_OBJS	=	./compiled_srcs/
 
 SRC			=	checker.c \
 				operations.c \
-				instructions.c
+				instructions.c \
+				utils.c \
+				debug.c
 
 SRCS		=	$(SRC)
 
@@ -86,11 +96,14 @@ NAME 		=	checker
 
 all:			$(NAME)
 
+debug:			DIR_HEADERS += -DDEBUG=1
+debug:			all
+
 # VARIABLES RULES #
 
 $(NAME):		$(OBJS)
 				@printf "\033[2K\r$(_GREEN) All files compiled into '$(DIR_OBJS)'. $(_END)✅\n"
-				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) $(OBJS) -o $(NAME) -lpthread
+				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) $(OBJS) -o $(NAME)
 				@echo "$(_GREEN) Executable '$(NAME)' created. $(_END)✅"
 
 # COMPILED_SOURCES RULES #
@@ -121,9 +134,9 @@ re:				fclean all
 # NORME #
 
 norm:
-				~/.norminette/norminette.rb $(DIR_SRCS)
-				~/.norminette/norminette.rb $(DIR_HEADERS)
+				@$(NORMINETTE) $(DIR_SRCS)
+				@$(NORMINETTE) $(DIR_HEADERS)
 
 # PHONY #
 
-.PHONY:			all clean fclean re
+.PHONY:			all debug clean fclean re norm

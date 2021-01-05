@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2020/12/28 16:07:00 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/05 02:08:36 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,6 +41,14 @@ _ICYAN		=	\x1b[46m
 _IWHITE		=	\x1b[47m
 
 # **************************************************************************** #
+
+# NORMINETTE #
+
+NORMINETTE	:=	$(shell which norminette)
+
+ifeq ($$?, 1)
+	NORMINETTE := ${HOME}/.norminette/norminette.rb
+endif
 
 ## VARIABLES ##
 
@@ -88,7 +96,7 @@ all:			$(NAME)
 
 $(NAME):		$(OBJS)
 				@printf "\033[2K\r$(_GREEN) All files compiled into '$(DIR_OBJS)'. $(_END)✅\n"
-				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) $(OBJS) -o $(NAME) -lpthread
+				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) $(OBJS) -o $(NAME)
 				@echo "$(_GREEN) Executable '$(NAME)' created. $(_END)✅"
 
 # COMPILED_SOURCES RULES #
@@ -119,9 +127,9 @@ re:				fclean all
 # NORME #
 
 norm:
-				~/.norminette/norminette.rb $(DIR_SRCS)
-				~/.norminette/norminette.rb $(DIR_HEADERS)
+				@$(NORMINETTE) $(DIR_SRCS)
+				@$(NORMINETTE) $(DIR_HEADERS)
 
 # PHONY #
 
-.PHONY:			all clean fclean re
+.PHONY:			all clean fclean re norm
