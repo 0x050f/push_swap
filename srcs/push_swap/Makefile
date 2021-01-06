@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/06 16:26:57 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/06 23:39:18 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -77,6 +77,7 @@ DIR_OBJS	=	./compiled_srcs/
 
 SRC			=	push_swap.c \
 				operations.c \
+				instructions.c \
 				utils.c \
 				debug.c
 

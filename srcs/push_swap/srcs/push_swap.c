@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:19 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/06 18:00:39 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/07 00:30:56 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,65 +137,59 @@ int				need_pa(t_stack *stack_a, t_stack *stack_b)
  stack_b->array[0] > stack_a->array[stack_a->size - 1])));
 }
 
-void			resolve(t_stack *stack_a, t_stack *stack_b)
+t_instruction	*choose_instruction(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
 {
-	int		i;
+	t_instruction	*new;
+
+	new = NULL;
+	if (need_swap_a(stack_a, stack_b)) // sa ?
+	{
+		if (need_swap_b(stack_a, stack_b)) // sb ?
+			new = add_instruction(instr, "ss");
+		else
+			new = add_instruction(instr, "sa");
+	}
+	else if (need_swap_b(stack_a, stack_b)) // sb ?
+		new = add_instruction(instr, "sb");
+	else if (stack_a->size > 2 && stack_a->array[0] < stack_a->array[1] && stack_a->array[0] < stack_a->array[stack_a->size - 1] && stack_a->array[1] > stack_a->array[stack_a->size - 1])
+		new = add_instruction(instr, "pb");
+	else if (stack_a->size > 2 &&
+(stack_a->array[0] > stack_a->array[2] ||
+stack_a->array[0] > stack_a->array[stack_a->size - 1])) // ra ?
+		new = add_instruction(instr, "ra");
+	else if (stack_a->size > 2 && stack_a->array[stack_a->size - 1] < stack_a->array[1]) // rra
+		new = add_instruction(instr, "rra");
+	else if (need_pb(stack_a, stack_b)) // pb ?
+		new = add_instruction(instr, "pb");
+	else if (need_pa(stack_a, stack_b)) // pa ?
+		new = add_instruction(instr, "pa");
+	else if (!stack_b->size) // pb ?
+		new = add_instruction(instr, "pb");
+	return (new);
+}
+
+void			resolve(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	int				i;
+	t_instruction	*tmp;
 
 	i = 0;
 	while ((stack_b->size || is_stack_ordered(stack_a)) && i < 20)
 	{
-		if (need_swap_a(stack_a, stack_b)) // sa ?
-		{
-			swap_stack(stack_a);
-			if (need_swap_b(stack_a, stack_b)) // sb ?
-			{
-				swap_stack(stack_b);
-				write(STDOUT_FILENO, "ss\n", 3);
-			}
-			else
-			{
-				write(STDOUT_FILENO, "sa\n", 3);
-			}
-		}
-		else if (need_swap_b(stack_a, stack_b)) // sb ?
-		{
-			swap_stack(stack_b);
-			write(STDOUT_FILENO, "sb\n", 3);
-		}
-		else if (stack_a->size > 2 && stack_a->array[0] < stack_a->array[1] && stack_a->array[0] < stack_a->array[stack_a->size - 1] && stack_a->array[1] > stack_a->array[stack_a->size - 1])
-		{
-			push_stack(stack_b, stack_a);
-			write(STDOUT_FILENO, "pb\n", 3);
-		}
-		else if (stack_a->size > 2 &&
-(stack_a->array[0] > stack_a->array[2] ||
-stack_a->array[0] > stack_a->array[stack_a->size - 1])) // ra ?
-		{
-			rotate_stack(stack_a);
-			write(STDOUT_FILENO, "ra\n", 3);
-		}
-		else if (stack_a->size > 2 && stack_a->array[stack_a->size - 1] < stack_a->array[1]) // rra
-		{
-			reverse_rotate_stack(stack_a);
-			write(STDOUT_FILENO, "rra\n", 4);
-		}
-		else if (need_pb(stack_a, stack_b)) // pb ?
-		{
-			push_stack(stack_b, stack_a);
-			write(STDOUT_FILENO, "pb\n", 3);
-		}
-		else if (need_pa(stack_a, stack_b)) // pa ?
-		{
-			push_stack(stack_a, stack_b);
-			write(STDOUT_FILENO, "pa\n", 3);
-		}
-		else if (!stack_b->size) // pb ?
-		{
-			push_stack(stack_b, stack_a);
-			write(STDOUT_FILENO, "pb\n", 3);
-		}
+		tmp = NULL;
+		choose_instruction(stack_a, stack_b, &tmp);
+		if (*instr)
+			(*instr)->next = tmp;
+		else
+			*instr = tmp;
+		execute_instructions(tmp, stack_a, stack_b);
 		if (DEBUG)
+		{
+			print_instructions(tmp);
 			print_stacks(stack_a, stack_b);
+		}
 		i++;
 	}
 	if (DEBUG)
@@ -210,11 +204,14 @@ int				main(int argc, char *argv[])
 {
 	t_stack				stack_a;
 	t_stack				stack_b;
+	t_instruction		*instr;
 
 	if (init_stacks(argc, argv, &stack_a, &stack_b))
 		return (1);
 	if (DEBUG)
 		print_stacks(&stack_a, &stack_b);
-	resolve(&stack_a, &stack_b);
+	instr = NULL;
+	resolve(&stack_a, &stack_b, &instr);
+	print_instructions(instr);
 	return (0);
 }

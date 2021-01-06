@@ -6,11 +6,38 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 15:59:21 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/06 23:09:36 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+int			ft_strcmp(const char *s1, const char *s2)
+{
+	int i;
+
+	i = 0;
+	while (s1[i] && s2[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
+}
+
+char		*ft_strdup(const char *str)
+{
+	int		i;
+	char	*pt;
+
+	i = 0;
+	while (str[i])
+		i++;
+	if (!(pt = malloc((i + 1) * sizeof(char))))
+		return (0);
+	i = -1;
+	while (str[++i])
+		pt[i] = str[i];
+	pt[i] = '\0';
+	return (pt);
+}
 
 size_t		ft_strlen(const char *s)
 {
