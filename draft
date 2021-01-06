@@ -1,7 +1,7 @@
 1 5 2 4 3
 
 -- pb
-5 2 4 3
+5 2 4 3				2 0 1
 1
 -- ra			-- rra
 2 4 3 5			3 5 2 4
@@ -19,7 +19,6 @@
 1 2 3 4 5		2 5
 				4 3 1
 				...
-
 
 3 2 1 0
 
@@ -135,10 +134,10 @@
 -- pb
 5 2 4
 3 1
--- sa		-- rra
-2 5 4		4 5 2
-3 1			3 1
---			-- pa
+-- sa		-- rra			-- ra
+2 5 4		4 5 2			2 4 5
+3 1			3 1				3 1
+--			-- pa			-- 
 			3 4 5 2
 			1
 			-- rra
@@ -150,9 +149,69 @@
 
 
 
+		/*
+		if (stack_a->size > 1 && (stack_a->array[0] > stack_a->array[1]) &&
+((stack_a->size < 4 && (stack_a->size != 3 ||
+(stack_a->array[2] < stack_a->array[1]))) || (stack_a->size > 2 &&
+stack_a->array[1] < stack_a->array[2] &&
+stack_a->array[2] > stack_a->array[0])))
+		{
+			swap_stack(stack_a);
+			write(STDOUT_FILENO, "sa\n", 3);
+		}
+		else if (stack_a->size > 2 && (stack_a->array[1] < stack_a->array[0]
+|| stack_a->array[0] > stack_a->array[stack_a->size - 1]))
+		{
+			if (stack_a->array[1] < stack_a->array[stack_a->size - 1])
+			{
+				rotate_stack(stack_a);
+				write(STDOUT_FILENO, "ra\n", 3);
+			}
+			else
+			{
+				reverse_rotate_stack(stack_a);
+				write(STDOUT_FILENO, "rra\n", 4);
+			}
+		}
+		else if (!stack_a->size || (stack_b->size &&
+stack_b->array[0] < stack_a->array[0] && (stack_a->size < 3 ||
+stack_a->array[1] < stack_a->array[2])))
+		{
+			push_stack(stack_a, stack_b);
+			write(STDOUT_FILENO, "pa\n", 3);
+		}
+		else if (!stack_b->size || (stack_a->size &&
+stack_a->array[0] > stack_b->array[0]))
+		{
+			push_stack(stack_b, stack_a);
+			write(STDOUT_FILENO, "pb\n", 3);
+		}
+		else if (stack_b->size)
+		{
+			if (stack_b->size > 1 && stack_b->array[0] < stack_b->array[1])
+			{
+				swap_stack(stack_b);
+				write(STDOUT_FILENO, "sb\n", 3);
+			}
+			else if (stack_b->size > 1 && stack_b->array[0] > stack_b->array[stack_b->size - 1])
+			{
+				reverse_rotate_stack(stack_b);
+				write(STDOUT_FILENO, "rrb\n", 4);
+			}
+			else if (stack_b->size > 1)
+			{
+				rotate_stack(stack_b);
+				write(STDOUT_FILENO, "rb\n", 3);
+			}
+			else
+			{
+				rotate_stack(stack_a);
+				write(STDOUT_FILENO, "ra\n", 3);
+			}
+		}
+		*/
 
+3 2 1 0
+3 0 2 1
 
-
-
-
-
+3 0 2 1

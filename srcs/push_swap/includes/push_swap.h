@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 09:08:37 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/06 17:41:26 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,22 @@
 # define _RED		"\x1b[31m"
 # define _YELLOW	"\x1b[33m"
 # define _GREEN		"\x1b[32m"
+
+# ifndef DEBUG
+#	define DEBUG 0
+# endif
+
+# define SA 0
+# define SB 1
+# define SS 2
+# define PA 3
+# define PB 4
+# define RA 5
+# define RB 6
+# define RR 7
+# define RRA 8
+# define RRB 9
+# define RRR 10
 
 typedef struct		s_stack
 {

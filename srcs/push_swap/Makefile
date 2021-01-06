@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/05 09:22:21 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/06 16:26:57 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,6 +94,9 @@ NAME 		=	push_swap
 ## RULES ##
 
 all:			$(NAME)
+
+debug:			DIR_HEADERS += -DDEBUG=1
+debug:			all
 
 # VARIABLES RULES #
 
