@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/01/05 07:52:19 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/07 00:30:56 by lmartin          ###   ########.fr       */
+/*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
+/*   Updated: 2021/01/08 11:36:35 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ t_stack *stack_a, t_stack *stack_b)
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
+	stack_a->max_size = argc - 1;
+	stack_b->max_size = argc - 1;
 	stack_a->size = 0;
 	stack_b->size = 0;
 	i = 1;
@@ -83,16 +85,10 @@ t_stack *stack_a, t_stack *stack_b)
 int				need_swap_a(t_stack *stack_a, t_stack *stack_b)
 {
 	/*
-	 * 1 0 | a
-	 *
-	 * or
-	 *
-	 * 1 0 2 .. | a
+	 * 1 0 .. | a
 	*/
 	(void)stack_b;
-	return ((stack_a->size == 2 ||
-(stack_a->size > 2 && stack_a->array[1] < stack_a->array[2]))
-&& stack_a->array[0] > stack_a->array[1]);
+	return (stack_a->size > 1 && stack_a->array[0] > stack_a->array[1]);
 }
 
 int				need_swap_b(t_stack *stack_a, t_stack *stack_b)
@@ -101,7 +97,7 @@ int				need_swap_b(t_stack *stack_a, t_stack *stack_b)
 	 * 0 1 .. | b
 	*/
 	(void)stack_a;
-	return (stack_b->size > 2 && stack_b->array[0] < stack_b->array[1]);
+	return (stack_b->size > 1 && stack_b->array[0] < stack_b->array[1]);
 }
 
 int				need_pb(t_stack *stack_a, t_stack *stack_b)
@@ -141,6 +137,9 @@ t_instruction	*choose_instruction(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
 	t_instruction	*new;
+	t_instruction	*tmp;
+	t_stack			*copy_a;
+	t_stack			*copy_b;
 
 	new = NULL;
 	if (need_swap_a(stack_a, stack_b)) // sa ?
@@ -158,14 +157,32 @@ t_instruction **instr)
 (stack_a->array[0] > stack_a->array[2] ||
 stack_a->array[0] > stack_a->array[stack_a->size - 1])) // ra ?
 		new = add_instruction(instr, "ra");
-	else if (stack_a->size > 2 && stack_a->array[stack_a->size - 1] < stack_a->array[1]) // rra
+	else if (stack_a->size > 2 && (stack_a->array[stack_a->size - 1] < stack_a->array[1])) // rra
 		new = add_instruction(instr, "rra");
 	else if (need_pb(stack_a, stack_b)) // pb ?
 		new = add_instruction(instr, "pb");
 	else if (need_pa(stack_a, stack_b)) // pa ?
 		new = add_instruction(instr, "pa");
 	else if (!stack_b->size) // pb ?
+	{
 		new = add_instruction(instr, "pb");
+		copy_a = copy_stack(stack_a);
+		copy_b = copy_stack(stack_b);
+		execute_instructions(new, copy_a, copy_b);
+		tmp = choose_instruction(copy_a, copy_b, instr);
+		if (!(ft_strcmp(tmp->line, "pa")))
+		{
+			remove_instruction(instr, tmp);
+			remove_instruction(instr, new);
+			free_stack(copy_a);
+			free_stack(copy_b);
+			new = add_instruction(instr, "ra");
+		}
+		else
+			remove_instruction(instr, tmp);
+	}
+	else
+		new = add_instruction(instr, "pa");
 	return (new);
 }
 
@@ -173,17 +190,20 @@ void			resolve(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
 	int				i;
+	t_instruction	*ptr;
 	t_instruction	*tmp;
 
+	ptr = NULL;
 	i = 0;
 	while ((stack_b->size || is_stack_ordered(stack_a)) && i < 20)
 	{
 		tmp = NULL;
 		choose_instruction(stack_a, stack_b, &tmp);
-		if (*instr)
-			(*instr)->next = tmp;
+		if (ptr)
+			ptr->next = tmp;
 		else
 			*instr = tmp;
+		ptr = tmp;
 		execute_instructions(tmp, stack_a, stack_b);
 		if (DEBUG)
 		{

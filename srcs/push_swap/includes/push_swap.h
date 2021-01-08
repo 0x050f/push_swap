@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/06 23:51:08 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/08 11:03:33 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,14 @@ typedef struct		s_stack
 {
 	int				*array;
 	size_t			size;
+	size_t			max_size;
 }					t_stack;
 
 typedef struct		s_instruction
 {
 	char			*line;
 	void			*next;
+	void			*prev;
 }					t_instruction;
 
 /*
@@ -47,6 +49,13 @@ void				push_stack(t_stack *stack1, t_stack *stack2);
 void				swap_stack(t_stack *stack);
 
 /*
+** stacks.c
+*/
+
+void				free_stack(t_stack *stack);
+t_stack				*copy_stack(t_stack *stack);
+
+/*
 ** instructions.c
 */
 
@@ -54,6 +63,8 @@ void				print_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
 t_instruction		*add_instruction(t_instruction **instructions, char *line);
+void				remove_instruction(t_instruction **instructions,
+t_instruction *to_delete);
 
 /*
 ** utils.c
@@ -66,6 +77,6 @@ void				ft_putnbr(int n);
 int					ft_atoi(const char *str, int *num);
 
 // DEBUG
-void			print_stacks(t_stack *stack_a, t_stack *stack_b);
+void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 
 #endif
