@@ -6,11 +6,18 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/06 23:09:36 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/08 15:05:10 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+unsigned long		ft_abs(long n)
+{
+	if (n < 0)
+		return (n * -1);
+	return (n);
+}
 
 int			ft_strcmp(const char *s1, const char *s2)
 {

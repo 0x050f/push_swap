@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 11:03:33 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/08 15:05:31 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void				swap_stack(t_stack *stack);
 ** stacks.c
 */
 
+size_t				closer_inf_pos(int nb, t_stack *stack);
+size_t				closer_sup_pos(int nb, t_stack *stack);
 void				free_stack(t_stack *stack);
 t_stack				*copy_stack(t_stack *stack);
 
@@ -70,6 +72,7 @@ t_instruction *to_delete);
 ** utils.c
 */
 
+unsigned long		ft_abs(long n);
 int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strdup(const char *str);
 size_t				ft_strlen(const char *s);

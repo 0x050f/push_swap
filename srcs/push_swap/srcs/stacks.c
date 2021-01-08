@@ -6,11 +6,31 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:18 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 10:58:28 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/08 12:08:04 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+size_t			closer_inf_pos(int nb, t_stack *stack)
+{
+	size_t		i;
+
+	i = 0;
+	while (i < stack->size && (nb < stack->array[i] || stack->array[i] == nb))
+		i++;
+	return (i);
+}
+
+size_t			closer_sup_pos(int nb, t_stack *stack)
+{
+	size_t		i;
+
+	i = 0;
+	while (i < stack->size && (nb > stack->array[i] || stack->array[i] == nb))
+		i++;
+	return (i);
+}
 
 void			free_stack(t_stack *stack)
 {

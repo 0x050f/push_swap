@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 11:36:35 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/08 17:27:01 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,8 @@ int				need_swap_a(t_stack *stack_a, t_stack *stack_b)
 	 * 1 0 .. | a
 	*/
 	(void)stack_b;
-	return (stack_a->size > 1 && stack_a->array[0] > stack_a->array[1]);
+	return (stack_a->size > 1 && stack_a->array[0] > stack_a->array[1] &&
+(stack_a->size == 2 || stack_a->array[0] < stack_a->array[2]));
 }
 
 int				need_swap_b(t_stack *stack_a, t_stack *stack_b)
@@ -176,6 +177,7 @@ stack_a->array[0] > stack_a->array[stack_a->size - 1])) // ra ?
 			remove_instruction(instr, new);
 			free_stack(copy_a);
 			free_stack(copy_b);
+			write(STDOUT_FILENO, "pue la merde\n", 13);
 			new = add_instruction(instr, "ra");
 		}
 		else
@@ -189,14 +191,65 @@ stack_a->array[0] > stack_a->array[stack_a->size - 1])) // ra ?
 void			resolve(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
-	int				i;
-	t_instruction	*ptr;
+	size_t		i;
+	long		pos_a;
+	long		pos_b;
+//	t_instruction	*ptr;
 	t_instruction	*tmp;
 
-	ptr = NULL;
+//	ptr = NULL;
+	tmp = NULL;
 	i = 0;
-	while ((stack_b->size || is_stack_ordered(stack_a)) && i < 20)
+	while ((stack_b->size || is_stack_ordered(stack_a)))
 	{
+		if (stack_b->size && stack_b->array[0] < stack_a->array[0])
+			tmp = add_instruction(instr, "pa");
+		else if (stack_a->array[0] > stack_a->array[1] && (stack_a->size < 3 || (stack_a->array[0] < stack_a->array[2])))
+		{
+			if (stack_b->size > 1 && stack_b->array[0] < stack_b->array[1])
+				tmp = add_instruction(instr, "ss");
+			else
+				tmp = add_instruction(instr, "sa");
+		}
+		else if (stack_b->size > 1 && stack_b->array[0] < stack_b->array[1])
+			tmp = add_instruction(instr, "sb");
+		else if (stack_a->array[0] > stack_a->array[1] && closer_sup_pos(stack_a->array[0], stack_a) != stack_a->size)
+			tmp = add_instruction(instr, "pb");
+		else
+		{
+			pos_a = closer_sup_pos(stack_a->array[0], stack_a) - (stack_a->size / 2);
+			if (stack_b->size && closer_sup_pos(stack_b->array[0], stack_b) != stack_b->size)
+			{
+				pos_a = closer_sup_pos(stack_b->array[0], stack_a) - (stack_a->size / 2);
+				pos_b = closer_inf_pos(stack_a->array[0], stack_b) - (stack_b->size / 2);
+				if ((stack_b->size < 2 || ft_abs(pos_a) <= ft_abs(pos_b)))
+				{
+					if (pos_a < 0 || (size_t)pos_a > stack_a->size / 2 ||
+						(tmp && !ft_strcmp(tmp->line, "ra")))
+						tmp = add_instruction(instr, "ra");
+					else
+						tmp = add_instruction(instr, "rra");
+				}
+				else
+				{
+					if (pos_b < 0 || (size_t)pos_b > stack_b->size / 2 ||
+						(tmp && !ft_strcmp(tmp->line, "rb")))
+						tmp = add_instruction(instr, "rb");
+					else
+						tmp = add_instruction(instr, "rrb");
+				}
+			}
+			else
+			{
+				if (pos_a < 0 || (size_t)pos_a > stack_a->size / 2 ||
+					(tmp && !ft_strcmp(tmp->line, "ra")))
+					tmp = add_instruction(instr, "ra");
+				else
+					tmp = add_instruction(instr, "rra");
+			}
+		}
+		execute_instructions(tmp, stack_a, stack_b);
+		/*
 		tmp = NULL;
 		choose_instruction(stack_a, stack_b, &tmp);
 		if (ptr)
@@ -205,6 +258,7 @@ t_instruction **instr)
 			*instr = tmp;
 		ptr = tmp;
 		execute_instructions(tmp, stack_a, stack_b);
+		*/
 		if (DEBUG)
 		{
 			print_instructions(tmp);
