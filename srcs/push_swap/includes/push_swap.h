@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 15:05:31 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/09 04:57:55 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 # ifndef DEBUG
 #	define DEBUG 0
 # endif
+
+# define ASC		0
+# define DESC		1
 
 typedef struct		s_stack
 {
