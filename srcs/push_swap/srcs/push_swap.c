@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/10 15:21:59 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/10 15:54:11 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,8 +139,11 @@ t_instruction **instr)
 {
 	size_t		i;
 	size_t		j;
+	size_t		min_j;
+	size_t		k;
+	size_t		min_k;
 	size_t		mvt[2];
-	size_t		tmp_mvt[2];
+	size_t		tmp_mvt[4];
 	t_instruction	*tmp;
 
 	i = 0;
@@ -155,6 +158,7 @@ t_instruction **instr)
 				mvt[1] = stack_b->size - mvt[0];
 			else
 				mvt[1] = mvt[0];
+			min_j = mvt[1] + 1;
 			j = 1;
 			while (j < stack_a->size && j < mvt[1])
 			{
@@ -163,14 +167,46 @@ t_instruction **instr)
 					tmp_mvt[1] = stack_b->size - tmp_mvt[0];
 				else
 					tmp_mvt[1] = tmp_mvt[0];
-				if (j + tmp_mvt[1] < mvt[1])
-					break;
+				if (j + tmp_mvt[1] < min_j)
+				{
+					min_j = j + tmp_mvt[1];
+					tmp_mvt[2] = tmp_mvt[0];
+				}
 				j++;
 			}
-			if (stack_a->size > 1 && j + tmp_mvt[1] < mvt[1])
+			min_k = mvt[1] + 1;
+			k = stack_a->size - 1;
+			while (k > 0 && stack_a->size - k < mvt[1])
+			{
+				tmp_mvt[0] = closer_pos_to_inf(stack_a->array[k], stack_b);
+				if (tmp_mvt[0] > stack_b->size / 2)
+					tmp_mvt[1] = stack_b->size - tmp_mvt[0];
+				else
+					tmp_mvt[1] = tmp_mvt[0];
+				if ((stack_a->size - k) + tmp_mvt[1] < min_k)
+				{
+					min_k = (stack_a->size - k) + tmp_mvt[1];
+					tmp_mvt[3] = tmp_mvt[0];
+				}
+				k--;
+			}
+			if (stack_a->size > 1 && (min_j < mvt[1] || min_k < mvt[1]))
 			{
 				// RA OR RRA
-				tmp = add_instruction(instr, "ra");
+				if (min_j < min_k)
+				{
+					if (tmp_mvt[2] > stack_b->size / 2)
+						tmp = add_instruction(instr, "ra");
+					else
+						tmp = add_instruction(instr, "rr");
+				}
+				else
+				{
+					if (tmp_mvt[3] > stack_b->size / 2)
+						tmp = add_instruction(instr, "rrr");
+					else
+						tmp = add_instruction(instr, "rra");
+				}
 			}
 			else
 			{
