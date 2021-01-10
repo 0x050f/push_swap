@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/10 13:39:08 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/10 15:21:59 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,9 @@ void			resolve(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
 	size_t		i;
+	size_t		j;
+	size_t		mvt[2];
+	size_t		tmp_mvt[2];
 	t_instruction	*tmp;
 
 	i = 0;
@@ -147,8 +150,36 @@ t_instruction **instr)
 			tmp = add_instruction(instr, "pb");
 		else
 		{
-			ft_putnbr(closer_pos_to_inf(stack_a->array[0], stack_b));
-			tmp = add_instruction(instr, "rb");
+			mvt[0] = closer_pos_to_inf(stack_a->array[0], stack_b);
+			if (mvt[0] > stack_b->size / 2)
+				mvt[1] = stack_b->size - mvt[0];
+			else
+				mvt[1] = mvt[0];
+			j = 1;
+			while (j < stack_a->size && j < mvt[1])
+			{
+				tmp_mvt[0] = closer_pos_to_inf(stack_a->array[j], stack_b);
+				if (tmp_mvt[0] > stack_b->size / 2)
+					tmp_mvt[1] = stack_b->size - tmp_mvt[0];
+				else
+					tmp_mvt[1] = tmp_mvt[0];
+				if (j + tmp_mvt[1] < mvt[1])
+					break;
+				j++;
+			}
+			if (stack_a->size > 1 && j + tmp_mvt[1] < mvt[1])
+			{
+				// RA OR RRA
+				tmp = add_instruction(instr, "ra");
+			}
+			else
+			{
+				// RB OR RRB
+				if (mvt[0] > stack_b->size / 2)
+					tmp = add_instruction(instr, "rrb");
+				else
+					tmp = add_instruction(instr, "rb");
+			}
 		}
 		execute_instructions(tmp, stack_a, stack_b);
 		if (DEBUG)
