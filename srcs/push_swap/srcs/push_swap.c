@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/09 05:56:11 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/10 13:39:08 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,36 @@ stack_b->array[stack_b->size - 1] < stack_b->array[0])
 	return (0);
 }
 
+
+size_t			closer_pos_to_inf(int nb, t_stack *stack)
+{
+	size_t		pos;
+
+	pos = 0;
+	while (pos < stack->size && nb > stack->array[pos])
+		pos++;
+	if (pos == stack->size)// > all
+	{
+		pos = 1;
+		while (pos < stack->size && stack->array[pos - 1] > stack->array[pos])
+			pos++;
+		if (pos == stack->size)
+			pos = 0;
+		return (pos);
+	}
+	while (pos < stack->size - 1 && nb < stack->array[pos])
+		pos++;
+	if (pos == stack->size - 1 && stack->array[pos] > nb)// < all
+	{
+		pos = 1;
+		while (pos < stack->size && stack->array[pos - 1] > stack->array[pos])
+			pos++;
+		if (pos == stack->size)
+			pos = 0;
+	}
+	return (pos);
+}
+
 void			resolve(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
@@ -117,6 +147,7 @@ t_instruction **instr)
 			tmp = add_instruction(instr, "pb");
 		else
 		{
+			ft_putnbr(closer_pos_to_inf(stack_a->array[0], stack_b));
 			tmp = add_instruction(instr, "rb");
 		}
 		execute_instructions(tmp, stack_a, stack_b);
@@ -136,6 +167,7 @@ t_instruction **instr)
 			print_instructions(tmp);
 			print_stacks(stack_a, stack_b);
 		}
+		i++;
 	}
 	while (stack_b->size)
 	{
