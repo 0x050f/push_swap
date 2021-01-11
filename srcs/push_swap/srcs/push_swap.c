@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 02:32:01 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/11 02:45:48 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,34 +149,21 @@ t_stack *stack_a, t_stack *stack_b)
 	while (i < stack_a->size && i < minimal_mvt)
 	{
 		tmp[0] = closer_pos_to_inf(stack_a->array[i], stack_b);
-		if (tmp[0] > stack_b->size / 2)
+		tmp[1] = stack_b->size - tmp[0];
+		if (tmp[0] > stack_b->size / 2 && i + tmp[1] < min)
 		{
-			tmp[1] = stack_b->size - tmp[0];
-			if (i + tmp[1] < min)
-			{
-				min = i + tmp[1];
-				*min_mvt = tmp[0];
-			}
+			min = i + tmp[1];
+			*min_mvt = tmp[0];
 		}
-		else
+		else if (tmp[0] >= i && tmp[0] < min)
 		{
-			tmp[1] = tmp[0];
-			if (tmp[1] > i)
-			{
-				if (tmp[1] < min)
-				{
-					min = tmp[1];
-					*min_mvt = tmp[0];
-				}
-			}
-			else
-			{
-				if (i < min)
-				{
-					min = i;
-					*min_mvt = tmp[0];
-				}
-			}
+			min = tmp[0];
+			*min_mvt = tmp[0];
+		}
+		else if (tmp[0] < i && i < min)
+		{
+			min = i;
+			*min_mvt = tmp[0];
 		}
 		i++;
 	}
@@ -197,34 +184,23 @@ t_stack *stack_a, t_stack *stack_b)
 	while (i > 0 && stack_a->size - i < minimal_mvt)
 	{
 		tmp[0] = closer_pos_to_inf(stack_a->array[i], stack_b);
-		if (tmp[0] > stack_b->size / 2)
+		tmp[1] = stack_b->size - tmp[0];
+		if (tmp[0] > stack_b->size / 2 &&
+tmp[1] >= (stack_a->size - i) && tmp[1] < min)
 		{
-			tmp[1] = stack_b->size - tmp[0];
-			if (tmp[1] > (stack_a->size - i))
-			{
-				if (tmp[1] < min)
-				{
-					min = tmp[1];
-					*min_mvt = tmp[0];
-				}
-			}
-			else
-			{
-				if ((stack_a->size - i) < min)
-				{
-					min = (stack_a->size - i);
-					*min_mvt = tmp[0];
-				}
-			}
+			min = tmp[1];
+			*min_mvt = tmp[0];
 		}
-		else
+		else if (tmp[0] > stack_b->size / 2 &&
+tmp[1] < (stack_a->size - i) && (stack_a->size - i) < min)
 		{
-			tmp[1] = tmp[0];
-			if ((stack_a->size - i) + tmp[1] < min)
-			{
-				min = (stack_a->size - i) + tmp[1];
-				*min_mvt = tmp[0];
-			}
+			min = (stack_a->size - i);
+			*min_mvt = tmp[0];
+		}
+		else if ((stack_a->size - i) + tmp[0] < min)
+		{
+			min = (stack_a->size - i) + tmp[0];
+			*min_mvt = tmp[0];
 		}
 		i--;
 	}
