@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 11:23:44 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/11 12:07:18 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ t_stack *stack_a, t_stack *stack_b)
 		if (!ft_strcmp(instr->line, "rrb") || !ft_strcmp(instr->line, "rrr"))
 			reverse_rotate_stack(stack_b);
 		instr = instr->next;
+	}
+	if (DEBUG)
+	{
+		print_instructions(instr);
+		print_stacks(stack_a, stack_b);
 	}
 }
 
