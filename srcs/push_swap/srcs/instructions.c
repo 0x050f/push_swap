@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 12:07:18 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/11 15:49:41 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ void			print_instructions(t_instruction *instr)
 void			execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b)
 {
+	if (DEBUG)
+		print_instructions(instr);
 	while (instr)
 	{
 		if (!ft_strcmp(instr->line, "sa") || !ft_strcmp(instr->line, "ss"))
@@ -50,10 +52,7 @@ t_stack *stack_a, t_stack *stack_b)
 		instr = instr->next;
 	}
 	if (DEBUG)
-	{
-		print_instructions(instr);
 		print_stacks(stack_a, stack_b);
-	}
 }
 
 void			remove_instruction(t_instruction **instructions,

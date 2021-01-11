@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 11:58:17 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 12:06:04 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/11 15:45:24 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,7 +130,7 @@ t_stack *stack_a, t_stack *stack_b)
 		minimal_mvt = stack_b->size - minimal_mvt;
 	min = minimal_mvt + 1;
 	i = stack_a->size - 1;
-	while (i > 0 && stack_a->size - i < minimal_mvt)
+	while (i > 0 && (stack_a->size - i) < minimal_mvt)
 	{
 		tmp[0] = closer_pos_to_inf(stack_a->array[i], stack_b);
 		tmp[1] = stack_b->size - tmp[0];
