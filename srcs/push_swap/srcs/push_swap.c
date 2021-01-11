@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 02:45:48 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/11 03:12:35 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,9 +255,27 @@ t_instruction **instr)
 		}
 		i++;
 	}
-	while (is_stack_ordered(stack_b, DESC))
+	size_t	j;
+	size_t	num;
+
+	j = 0;
+	num = 0;
+	if (is_stack_ordered(stack_b, DESC))
 	{
-		tmp = add_instruction(instr, "rb");
+		while (j < stack_b->size - 1 &&
+stack_b->array[j] > stack_b->array[j + 1])
+			j++;
+		if (j > stack_b->size / 2)
+			num = stack_b->size - (j + 1);
+		else
+			num = j + 1;
+	}
+	while (num--)
+	{
+		if (j > stack_b->size / 2)
+			tmp = add_instruction(instr, "rrb");
+		else
+			tmp = add_instruction(instr, "rb");
 		execute_instructions(tmp, stack_a, stack_b);
 		if (DEBUG)
 		{
