@@ -295,7 +295,15 @@ new = cpy_instructions(*instr);
 tmp = add_instruction(new, "ra");
 
 new = cpy_instructions(*instr);
-tmp = add_instruction(new, "sa");
+tmp = add_instruction(new, "rra");
 
 new = cpy_instructions(*instr);
 tmp = add_instruction(new, "sa");
+
+new = cpy_instructions(*instr);
+if 2
+tmp = add_instruction(new, "pa");
+
+new = cpy_instructions(*instr);
+if 2
+tmp = add_instruction(new, "ss");

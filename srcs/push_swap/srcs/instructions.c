@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 12:56:11 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 17:27:39 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,30 +55,7 @@ t_stack *stack_a, t_stack *stack_b)
 		print_stacks(stack_a, stack_b);
 }
 
-void			remove_instruction(t_instruction **instructions,
-t_instruction *to_delete)
-{
-	if (*instructions == to_delete)
-	{
-		if (to_delete->prev)
-			*instructions = to_delete->prev;
-		else if (to_delete->next)
-			*instructions = to_delete->next;
-		else
-			*instructions = NULL;
-	}
-	else
-	{
-		if (to_delete->prev)
-			((t_instruction *)to_delete->prev)->next = to_delete->next;
-		if (to_delete->next)
-			((t_instruction *)to_delete->next)->prev = to_delete->prev;
-	}
-	free(to_delete->line);
-	free(to_delete);
-}
-
-t_instruction	*cpy_instructions(t_instruction *instructions)
+t_instruction	*copy_instructions(t_instruction *instructions)
 {
 	t_instruction	*new;
 	

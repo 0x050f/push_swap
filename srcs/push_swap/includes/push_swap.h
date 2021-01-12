@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 13:10:13 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 17:27:53 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,20 +78,25 @@ void				print_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
 t_instruction		*add_instruction(t_instruction **instructions, char *line);
-t_instruction		*cpy_instructions(t_instruction *instructions);
-void				remove_instruction(t_instruction **instructions,
-t_instruction *to_delete); // UNUSED
+t_instruction		*copy_instructions(t_instruction *instructions);
 
 /*
 ** movements.c
 */
 
-int				can_pb(t_stack *stack_a, t_stack *stack_b);
-size_t			closer_pos_to_inf(int nb, t_stack *stack);
-size_t			get_less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
+int					can_pb(t_stack *stack_a, t_stack *stack_b);
+size_t				closer_pos_to_inf(int nb, t_stack *stack);
+size_t				get_less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b);
-size_t			get_less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
+size_t				get_less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b);
+
+/*
+** states.c
+*/
+
+void				free_states(t_state **states);
+t_state				*add_state(t_state **states, t_state *state_from);
 
 /*
 ** utils.c

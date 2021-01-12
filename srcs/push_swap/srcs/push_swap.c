@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 12:08:28 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 17:55:00 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,96 @@ stack_b->array[i] > stack_b->array[i + 1])
 	}
 }
 
-void			order_a(t_stack *stack_a, t_stack *stack_b,
+int				order_a(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
+	t_state			*result;
+	t_state			*new_states;
+	t_state			*states;
+	t_state			*actual;
+	t_state			*tmp;
+	t_instruction	*tmp_instr;
+	
+	if (!(states = malloc(sizeof(t_state))))
+		return (1);
+	states->stack_a = copy_stack(stack_a);
+	if (!(states->stack_b = malloc(sizeof(t_stack))))
+		return (1);
+	states->stack_b->max_size = stack_a->max_size;
+	states->stack_b->size = 0;
+	states->instructions = NULL;
+	states->next = NULL;
+	result = NULL;
+	while (!result)
+	{
+		new_states = NULL;
+		tmp = states;
+		while (tmp)
+		{
+			if (tmp->stack_b->size < 2)
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "pb");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			if (tmp->stack_b->size > 0)
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "pa");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			actual = add_state(&new_states, tmp);
+			tmp_instr = add_instruction(&actual->instructions, "sa");
+			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			if (tmp->stack_b->size == 2)
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "sb");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			if (tmp->stack_b->size == 2)
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "ss");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			actual = add_state(&new_states, tmp);
+			tmp_instr = add_instruction(&actual->instructions, "ra");
+			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			actual = add_state(&new_states, tmp);
+			tmp_instr = add_instruction(&actual->instructions, "rra");
+			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			tmp = tmp->next;
+		}
+		free_states(&states);
+		states = new_states;
+		tmp = states;
+		while (tmp)
+		{
+			if (!tmp->stack_b->size && !is_stack_ordered(tmp->stack_a, ASC))
+			{
+				add_state(&result, tmp);
+				break;
+			}
+			tmp = tmp->next;
+		}
+	}
+	free_states(&states);
+
+	execute_instructions(result->instructions, stack_a, stack_b);
+	tmp_instr = *instr;
+	if (tmp_instr)
+	{
+		while (tmp_instr->next)
+			tmp_instr = tmp_instr->next;
+		tmp_instr->next = copy_instructions(result->instructions);
+		((t_instruction *)tmp_instr->next)->prev = tmp_instr;
+	}
+	else
+		*instr = copy_instructions(result->instructions);
+	free_states(&result);
+	return (0);
+	/*
 	size_t			i;
 	int				min;
 	t_instruction	*tmp;
@@ -56,7 +143,6 @@ t_instruction **instr)
 			min = stack_a->array[i];
 		i++;
 	}
-	// PB - RA - SA - PA
 	while (is_stack_ordered(stack_a, ASC))
 	{
 		if (stack_a->array[0] > stack_a->array[1] && stack_a->array[1] != min)
@@ -64,7 +150,7 @@ t_instruction **instr)
 		else
 			tmp = add_instruction(instr, "ra");
 		execute_instructions(tmp, stack_a, stack_b);
-	}
+	}*/
 }
 
 void			resolve(t_stack *stack_a, t_stack *stack_b,
@@ -107,7 +193,8 @@ t_instruction **instr)
 		execute_instructions(tmp, stack_a, stack_b);
 	}
 	order_a(stack_a, stack_b, instr);
-	align_stack_b(stack_a, stack_b, instr);
+	if (stack_b->size > 1)
+		align_stack_b(stack_a, stack_b, instr);
 	while (stack_b->size)
 	{
 		if (stack_b->array[0] > stack_a->array[stack_a->size - 1] ||
