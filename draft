@@ -283,3 +283,19 @@ if (i == b_size)
 3
 5	2
 
+
+BRUTEFORCE
+
+t_state		start;
+
+new = cpy_instructions(*instr);
+tmp = add_instruction(new, "pb");
+
+new = cpy_instructions(*instr);
+tmp = add_instruction(new, "ra");
+
+new = cpy_instructions(*instr);
+tmp = add_instruction(new, "sa");
+
+new = cpy_instructions(*instr);
+tmp = add_instruction(new, "sa");

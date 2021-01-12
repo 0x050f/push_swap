@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 15:49:41 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 12:56:11 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,19 @@ t_instruction *to_delete)
 	}
 	free(to_delete->line);
 	free(to_delete);
+}
+
+t_instruction	*cpy_instructions(t_instruction *instructions)
+{
+	t_instruction	*new;
+	
+	new = NULL;
+	while (instructions)
+	{
+		add_instruction(&new, instructions->line);
+		instructions = instructions->next;
+	}
+	return (new);
 }
 
 /*

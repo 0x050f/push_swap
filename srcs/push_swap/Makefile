@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/11 12:00:01 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/12 13:00:55 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -80,6 +80,7 @@ SRC			=	push_swap.c \
 				operations.c \
 				instructions.c \
 				movements.c \
+				states.c \
 				utils.c \
 				debug.c
 

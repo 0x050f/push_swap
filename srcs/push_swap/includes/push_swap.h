@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 12:12:09 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 13:10:13 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,14 @@ typedef struct		s_instruction
 	void			*prev;
 }					t_instruction;
 
+typedef struct		s_state
+{
+	t_stack			*stack_a;
+	t_stack			*stack_b;
+	t_instruction	*instructions;
+	void			*next;
+}					t_state;
+
 /*
 ** operations.c
 */
@@ -70,6 +78,7 @@ void				print_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
 t_instruction		*add_instruction(t_instruction **instructions, char *line);
+t_instruction		*cpy_instructions(t_instruction *instructions);
 void				remove_instruction(t_instruction **instructions,
 t_instruction *to_delete); // UNUSED
 

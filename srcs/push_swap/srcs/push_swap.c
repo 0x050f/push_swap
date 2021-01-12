@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 16:37:43 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/12 12:08:28 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ t_instruction **instr)
 			min = stack_a->array[i];
 		i++;
 	}
+	// PB - RA - SA - PA
 	while (is_stack_ordered(stack_a, ASC))
 	{
 		if (stack_a->array[0] > stack_a->array[1] && stack_a->array[1] != min)
