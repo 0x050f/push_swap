@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 03:04:29 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/13 00:51:34 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,8 @@ int				main(int argc, char *argv[])
 	t_stack				stack_b;
 	t_instruction		*instructions;
 
+	if (argc < 2)
+		return (0);
 	if (init_stacks(argc, argv, &stack_a, &stack_b))
 		return (1);
 	if (init_instructions(&instructions))

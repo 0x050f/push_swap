@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 17:55:00 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/13 00:53:22 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,35 @@ stack_b->array[i] > stack_b->array[i + 1])
 	}
 }
 
+void			align_stack_a(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	size_t	i;
+	size_t	num;
+	t_instruction	*tmp;
+
+	i = 0;
+	num = 0;
+	if (is_stack_ordered(stack_a, ASC))
+	{
+		while (i < stack_a->size - 1 &&
+stack_a->array[i] < stack_a->array[i + 1])
+			i++;
+		if (i > stack_b->size / 2)
+			num = stack_b->size - (i + 1);
+		else
+			num = i + 1;
+	}
+	while (num--)
+	{
+		if (i > stack_b->size / 2)
+			tmp = add_instruction(instr, "rra");
+		else
+			tmp = add_instruction(instr, "ra");
+		execute_instructions(tmp, stack_a, stack_b);
+	}
+}
+
 int				order_a(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
@@ -50,6 +79,7 @@ t_instruction **instr)
 	t_state			*actual;
 	t_state			*tmp;
 	t_instruction	*tmp_instr;
+	t_instruction	*last_instr;
 	
 	if (!(states = malloc(sizeof(t_state))))
 		return (1);
@@ -67,39 +97,51 @@ t_instruction **instr)
 		tmp = states;
 		while (tmp)
 		{
-			if (tmp->stack_b->size < 2)
+			last_instr = tmp->instructions;
+			while (last_instr && last_instr->next)
+				last_instr = last_instr->next;
+			if (tmp->stack_b->size < 2 && (!last_instr || ft_strcmp(last_instr->line, "pa")))
 			{
 				actual = add_state(&new_states, tmp);
 				tmp_instr = add_instruction(&actual->instructions, "pb");
 				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
 			}
-			if (tmp->stack_b->size > 0)
+			if (tmp->stack_b->size > 0 && (!last_instr || ft_strcmp(last_instr->line, "pb")))
 			{
 				actual = add_state(&new_states, tmp);
 				tmp_instr = add_instruction(&actual->instructions, "pa");
 				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
 			}
-			actual = add_state(&new_states, tmp);
-			tmp_instr = add_instruction(&actual->instructions, "sa");
-			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
-			if (tmp->stack_b->size == 2)
+			if (!last_instr || (ft_strcmp(last_instr->line, "sa") && ft_strcmp(last_instr->line, "sb") && ft_strcmp(last_instr->line, "ss")))
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "sa");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			if (tmp->stack_b->size > 1 && (!last_instr || (ft_strcmp(last_instr->line, "sb") && ft_strcmp(last_instr->line, "sa") && ft_strcmp(last_instr->line, "ss"))))
 			{
 				actual = add_state(&new_states, tmp);
 				tmp_instr = add_instruction(&actual->instructions, "sb");
 				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
 			}
-			if (tmp->stack_b->size == 2)
+			if (tmp->stack_b->size > 1 && (!last_instr || (ft_strcmp(last_instr->line, "sb") && ft_strcmp(last_instr->line, "sa") && ft_strcmp(last_instr->line, "ss"))))
 			{
 				actual = add_state(&new_states, tmp);
 				tmp_instr = add_instruction(&actual->instructions, "ss");
 				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
 			}
-			actual = add_state(&new_states, tmp);
-			tmp_instr = add_instruction(&actual->instructions, "ra");
-			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
-			actual = add_state(&new_states, tmp);
-			tmp_instr = add_instruction(&actual->instructions, "rra");
-			execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			if (!last_instr || ft_strcmp(last_instr->line, "rra"))
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "ra");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
+			if (!last_instr || ft_strcmp(last_instr->line, "ra"))
+			{
+				actual = add_state(&new_states, tmp);
+				tmp_instr = add_instruction(&actual->instructions, "rra");
+				execute_instructions(tmp_instr, actual->stack_a, actual->stack_b);
+			}
 			tmp = tmp->next;
 		}
 		free_states(&states);
@@ -107,6 +149,8 @@ t_instruction **instr)
 		tmp = states;
 		while (tmp)
 		{
+			//print_instructions(tmp->instructions);
+			//write(STDOUT_FILENO, "\n", 1);
 			if (!tmp->stack_b->size && !is_stack_ordered(tmp->stack_a, ASC))
 			{
 				add_state(&result, tmp);
@@ -116,7 +160,6 @@ t_instruction **instr)
 		}
 	}
 	free_states(&states);
-
 	execute_instructions(result->instructions, stack_a, stack_b);
 	tmp_instr = *instr;
 	if (tmp_instr)
@@ -205,11 +248,7 @@ stack_a->array[0] < stack_a->array[stack_a->size - 1]))
 			tmp = add_instruction(instr, "rra");
 		execute_instructions(tmp, stack_a, stack_b);
 	}
-	while (is_stack_ordered(stack_a, ASC))
-	{
-		tmp = add_instruction(instr, "rra");
-		execute_instructions(tmp, stack_a, stack_b);
-	}
+	align_stack_b(stack_a, stack_b, instr);
 	/*
 	align_stack_b(stack_a, stack_b, instr);
 	while (stack_b->size)
@@ -225,12 +264,15 @@ int				main(int argc, char *argv[])
 	t_stack				stack_b;
 	t_instruction		*instr;
 
+	if (argc < 2)
+		return (0);
 	if (init_stacks(argc, argv, &stack_a, &stack_b))
 		return (1);
 	if (DEBUG)
 		print_stacks(&stack_a, &stack_b);
 	instr = NULL;
-	resolve(&stack_a, &stack_b, &instr);
+	if (is_stack_ordered(&stack_a, ASC))
+		resolve(&stack_a, &stack_b, &instr);
 	print_instructions(instr);
 	return (0);
 }
