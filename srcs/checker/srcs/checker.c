@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/13 00:51:34 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/13 01:09:47 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,14 @@ t_stack *stack_a, t_stack *stack_b)
 ** Read and fill intructions chained list
 */
 
+#include <string.h>
+
 int				init_instructions(t_instruction **instructions)
 {
+	int		errno;
 	int		ret;
 
+	errno = 0;
 	*instructions = NULL;
 	ret = get_instruction(instructions);
 	while (ret > 0)

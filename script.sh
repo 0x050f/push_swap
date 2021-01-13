@@ -31,5 +31,10 @@ done
 
 echo $str
 result=$(./push_swap $str)
-echo "$result" | ./checker $str
-echo "$result" | wc -l
+nb_char=$(env echo -n "$result" | wc -m)
+if [ $nb_char -ne 0 ]; then
+	echo "$result" | ./checker $str
+else
+	env echo -n "$result" | ./checker $str
+fi
+env echo -n "$result" | wc -l
