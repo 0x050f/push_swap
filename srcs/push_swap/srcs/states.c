@@ -6,11 +6,23 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 16:31:31 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 17:28:08 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/15 09:58:38 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+void		new_state_instruction(t_state **states, t_state *old_state,
+char *line)
+{
+	t_state			*state;
+	t_instruction	*instr;
+
+	state = add_state(states, old_state);
+	instr = add_instruction(&state->instructions, line);
+	state->last_instr = instr;
+	execute_instructions(instr, state->stack_a, state->stack_b);
+}
 
 void		free_states(t_state **states)
 {
@@ -51,6 +63,7 @@ t_state		*add_state(t_state **states, t_state *state_from)
 	new->stack_a = copy_stack(state_from->stack_a);
 	new->stack_b = copy_stack(state_from->stack_b);
 	new->instructions = copy_instructions(state_from->instructions);
+	new->last_instr = NULL;
 	new->next = NULL;
 	tmp = *states;
 	while (tmp && tmp->next)
