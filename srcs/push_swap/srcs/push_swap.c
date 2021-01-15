@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/15 11:54:01 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/15 14:20:53 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,96 @@ stack_b->array[i] > stack_b->array[i + 1])
 		else
 			tmp = add_instruction(instr, "rb");
 		execute_instructions(tmp, stack_a, stack_b);
+	}
+}
+
+void			align_stack_a(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	size_t	i;
+	size_t	num;
+	t_instruction	*tmp;
+
+	i = 0;
+	num = 0;
+	if (is_stack_ordered(stack_a, ASC))
+	{
+		while (i < stack_a->size - 1 &&
+stack_a->array[i] < stack_a->array[i + 1])
+			i++;
+		if (i > stack_b->size / 2)
+			num = stack_a->size - (i + 1);
+		else
+			num = i + 1;
+	}
+	while (num--)
+	{
+		if (i > stack_b->size / 2)
+			tmp = add_instruction(instr, "rra");
+		else
+			tmp = add_instruction(instr, "ra");
+		execute_instructions(tmp, stack_a, stack_b);
+	}
+}
+
+void			bruteforce_choice_a(t_state **new_states, t_state *tmp, size_t i, size_t num, t_stack *stack_b)
+{
+	t_instruction	*tmp_instr;
+
+	if (tmp->stack_b->size < 2 && (!tmp->last_instr ||
+ft_strcmp(tmp->last_instr->line, "pa")))
+		new_state_instruction(new_states, tmp, "pb");
+	if (tmp->stack_b->size > 0 && (!tmp->last_instr ||
+ft_strcmp(tmp->last_instr->line, "pb")))
+		new_state_instruction(new_states, tmp, "pa");
+	if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "sa") &&
+ft_strcmp(tmp->last_instr->line, "sb") &&
+ft_strcmp(tmp->last_instr->line, "ss")))
+		new_state_instruction(new_states, tmp, "sa");
+	if (tmp->stack_b->size > 1 && (!tmp->last_instr ||
+(ft_strcmp(tmp->last_instr->line, "sb") &&
+ft_strcmp(tmp->last_instr->line, "sa") &&
+ft_strcmp(tmp->last_instr->line, "ss"))))
+		new_state_instruction(new_states, tmp, "sb");
+	if (tmp->stack_b->size > 1 && (!tmp->last_instr ||
+(ft_strcmp(tmp->last_instr->line, "sb") &&
+ft_strcmp(tmp->last_instr->line, "sa") &&
+ft_strcmp(tmp->last_instr->line, "ss"))))
+		new_state_instruction(new_states, tmp, "ss");
+	tmp_instr = tmp->last_instr;
+	size_t j;
+	j = 0;
+	while (j < tmp->stack_a->size / 2 && tmp_instr && ft_strcmp(tmp_instr->line, "ra"))
+	{
+		tmp_instr = tmp->last_instr->prev;
+		j++;
+	}
+	if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "rra") && j < tmp->stack_a->size / 2))
+	{
+		if (i <= stack_b->size / 2 && num && !tmp->stack_b->size)
+		{
+			num--;
+			new_state_instruction(new_states, tmp, "rr");
+		}
+		else
+			new_state_instruction(new_states, tmp, "ra");
+	}
+	tmp_instr = tmp->last_instr;
+	j = 0;
+	while (j < tmp->stack_a->size / 2 && tmp_instr && ft_strcmp(tmp_instr->line, "rra"))
+	{
+		tmp_instr = tmp->last_instr->prev;
+		j++;
+	}
+	if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "ra") && j < tmp->stack_a->size / 2))
+	{
+		if (i > stack_b->size / 2 && num && !tmp->stack_b->size)
+		{
+			num--;
+			new_state_instruction(new_states, tmp, "rrr");
+		}
+		else
+			new_state_instruction(new_states, tmp, "rra");
 	}
 }
 
@@ -83,61 +173,7 @@ stack_b->array[i] > stack_b->array[i + 1])
 		tmp = states;
 		while (tmp)
 		{
-			if (tmp->stack_b->size < 2 && (!tmp->last_instr ||
-ft_strcmp(tmp->last_instr->line, "pa")))
-				new_state_instruction(&new_states, tmp, "pb");
-			if (tmp->stack_b->size > 0 && (!tmp->last_instr ||
-ft_strcmp(tmp->last_instr->line, "pb")))
-				new_state_instruction(&new_states, tmp, "pa");
-			if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "sa") &&
-ft_strcmp(tmp->last_instr->line, "sb") &&
-ft_strcmp(tmp->last_instr->line, "ss")))
-				new_state_instruction(&new_states, tmp, "sa");
-			if (tmp->stack_b->size > 1 && (!tmp->last_instr ||
-(ft_strcmp(tmp->last_instr->line, "sb") &&
-ft_strcmp(tmp->last_instr->line, "sa") &&
-ft_strcmp(tmp->last_instr->line, "ss"))))
-				new_state_instruction(&new_states, tmp, "sb");
-			if (tmp->stack_b->size > 1 && (!tmp->last_instr ||
-(ft_strcmp(tmp->last_instr->line, "sb") &&
-ft_strcmp(tmp->last_instr->line, "sa") &&
-ft_strcmp(tmp->last_instr->line, "ss"))))
-				new_state_instruction(&new_states, tmp, "ss");
-			tmp_instr = tmp->last_instr;
-			size_t j;
-			j = 0;
-			while (j < tmp->stack_a->size / 2 && tmp_instr && ft_strcmp(tmp_instr->line, "ra"))
-			{
-				tmp_instr = tmp->last_instr->prev;
-				j++;
-			}
-			if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "rra") && j < tmp->stack_a->size / 2))
-			{
-				if (i <= stack_b->size / 2 && num && !tmp->stack_b->size)
-				{
-					num--;
-					new_state_instruction(&new_states, tmp, "rr");
-				}
-				else
-					new_state_instruction(&new_states, tmp, "ra");
-			}
-			tmp_instr = tmp->last_instr;
-			j = 0;
-			while (j < tmp->stack_a->size / 2 && tmp_instr && ft_strcmp(tmp_instr->line, "rra"))
-			{
-				tmp_instr = tmp->last_instr->prev;
-				j++;
-			}
-			if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "ra") && j < tmp->stack_a->size / 2))
-			{
-				if (i > stack_b->size / 2 && num && !tmp->stack_b->size)
-				{
-					num--;
-					new_state_instruction(&new_states, tmp, "rrr");
-				}
-				else
-					new_state_instruction(&new_states, tmp, "rra");
-			}
+			bruteforce_choice_a(&new_states, tmp, i, num, stack_b);
 			tmp = tmp->next;
 		}
 		free_states(&states);
@@ -154,7 +190,6 @@ ft_strcmp(tmp->last_instr->line, "ss"))))
 		}
 	}
 	free_states(&states);
-
 	execute_instructions(result->instructions, stack_a, stack_b);
 	tmp_instr = *instr;
 	if (tmp_instr)
@@ -222,6 +257,7 @@ stack_a->array[0] < stack_a->array[stack_a->size - 1]))
 			tmp = add_instruction(instr, "rra");
 		execute_instructions(tmp, stack_a, stack_b);
 	}
+	align_stack_a(stack_a, stack_b, instr);
 }
 
 int				main(int argc, char *argv[])

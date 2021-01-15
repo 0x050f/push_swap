@@ -37,4 +37,4 @@ if [ $nb_char -ne 0 ]; then
 else
 	env echo -n "$result" | ./checker $str
 fi
-env echo -n "$result" | wc -l
+env echo "$result" | wc -l
