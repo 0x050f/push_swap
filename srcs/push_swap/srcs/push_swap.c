@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/19 16:50:46 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/19 18:48:49 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,8 +162,10 @@ stack_b->array[i] > stack_b->array[i + 1])
 	states->stack_a = copy_stack(stack_a);
 	if (!(states->stack_b = malloc(sizeof(t_stack))))
 		return (1);
+	states->stack_b->array = malloc(sizeof(int) * stack_a->max_size);
 	states->stack_b->max_size = stack_a->max_size;
 	states->stack_b->size = 0;
+	states->last_instr = NULL;
 	states->instructions = NULL;
 	states->next = NULL;
 	result = NULL;
@@ -219,6 +221,7 @@ t_instruction **instr)
 	states = malloc(sizeof(t_state));
 	states->stack_a = copy_stack(stack_a);
 	states->stack_b = malloc(sizeof(t_stack));
+	states->stack_b->array = malloc(sizeof(int) * stack_a->max_size);
 	states->stack_b->max_size = stack_a->max_size;
 	states->stack_b->size = 0;
 	states->instructions = NULL;
@@ -277,21 +280,14 @@ t_instruction **instr)
 	tmp_state = new_state->next;
 	while (tmp_state)
 	{
-		ft_putnbr(count_instructions(tmp_state->instructions));
-		write(1, "lol\n", 4);
 		if (count_instructions(tmp_state->instructions) < count_instructions(new_state->instructions))
 			new_state = tmp_state;
 		tmp_state = tmp_state->next;
 	}
-	exit(0);
 	if (new_state->instructions)
 	{
 		execute_instructions(new_state->instructions, stack_a, stack_b);
-		tmp = *instr;
-		while (tmp->next)
-			tmp = tmp->next;
-		tmp->next = copy_instructions(new_state->instructions);
-		((t_instruction *)tmp->next)->prev = tmp;
+		*instr = copy_instructions(new_state->instructions);
 	}
 	free_states(&states);
 	bruteforce_order_a(stack_a, stack_b, instr);
