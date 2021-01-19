@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/15 09:46:40 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/19 16:25:08 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ t_stack *stack_a, t_stack *stack_b);
 */
 
 void				print_instructions(t_instruction *instr);
+size_t				count_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
 t_instruction		*add_instruction(t_instruction **instructions, char *line);
@@ -96,7 +97,7 @@ t_stack *stack_a, t_stack *stack_b);
 ** states.c
 */
 
-void				new_state_instruction(t_state **states, t_state *old_state,
+t_state				*new_state_instruction(t_state **states, t_state *old_state,
 char *line);
 void				free_states(t_state **states);
 t_state				*add_state(t_state **states, t_state *state_from);

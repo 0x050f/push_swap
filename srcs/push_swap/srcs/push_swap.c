@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/15 14:20:53 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/19 16:50:46 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,37 +213,87 @@ t_instruction **instr)
 	size_t		min_mvt[2];
 	t_instruction	*tmp;
 
-	while (stack_a->size > 5)
+	t_state			*states;
+	t_state			*new_state;
+	
+	states = malloc(sizeof(t_state));
+	states->stack_a = copy_stack(stack_a);
+	states->stack_b = malloc(sizeof(t_stack));
+	states->stack_b->max_size = stack_a->max_size;
+	states->stack_b->size = 0;
+	states->instructions = NULL;
+	states->next = NULL;
+
+	int		i;
+
+	new_state = states;
+	i = -(stack_a->size / 100);
+	while (stack_a->size != 5 && i < (int)(stack_a->size / 100))
 	{
-		if (can_pb(stack_a, stack_b))
-			tmp = add_instruction(instr, "pb");
+		if (i == -(stack_a->size / 100))
+			new_state = new_state_instruction(&states, new_state, "pb");
+		else if (i < 0)
+			new_state = new_state_instruction(&states, new_state, "ra");
+		else if (!i)
+			new_state = new_state_instruction(&states, states, "rra");
 		else
+			new_state = new_state_instruction(&states, new_state, "rra");
+		while (new_state->stack_a->size > 5)
 		{
-			mvt[0] = closer_pos_to_inf(stack_a->array[0], stack_b);
-			min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], stack_a, stack_b);
-			min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], stack_a, stack_b);
-			if (mvt[0] > stack_b->size / 2)
-				mvt[1] = stack_b->size - mvt[0];
+			if (can_pb(new_state->stack_a, new_state->stack_b))
+				tmp = add_instruction(&new_state->instructions, "pb");
 			else
-				mvt[1] = mvt[0];
-			if (stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
 			{
-				if (min[0] <= min[1] && min_mvt[0] <= stack_b->size / 2)
-					tmp = add_instruction(instr, "rr");
-				else if (min[0] < min[1] && min_mvt[0] > stack_b->size / 2)
-					tmp = add_instruction(instr, "ra");
-				else if (min_mvt[1] > stack_b->size / 2)
-					tmp = add_instruction(instr, "rrr");
+				mvt[0] = closer_pos_to_inf(new_state->stack_a->array[0], new_state->stack_b);
+				min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], new_state->stack_a, new_state->stack_b);
+				min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], new_state->stack_a, new_state->stack_b);
+				if (mvt[0] > new_state->stack_b->size / 2)
+					mvt[1] = new_state->stack_b->size - mvt[0];
 				else
-					tmp = add_instruction(instr, "rra");
+					mvt[1] = mvt[0];
+				if (new_state->stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
+				{
+					if (min[0] <= min[1] && min_mvt[0] <= new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "rr");
+					else if (min[0] < min[1] && min_mvt[0] > new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "ra");
+					else if (min_mvt[1] > new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "rrr");
+					else
+						tmp = add_instruction(&new_state->instructions, "rra");
+				}
+				else if (mvt[0] > new_state->stack_b->size / 2)
+					tmp = add_instruction(&new_state->instructions, "rrb");
+				else
+					tmp = add_instruction(&new_state->instructions, "rb");
 			}
-			else if (mvt[0] > stack_b->size / 2)
-				tmp = add_instruction(instr, "rrb");
-			else
-				tmp = add_instruction(instr, "rb");
+			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
-		execute_instructions(tmp, stack_a, stack_b);
+		i++;
 	}
+	t_state		*tmp_state;
+
+	new_state = states->next;
+	tmp_state = new_state->next;
+	while (tmp_state)
+	{
+		ft_putnbr(count_instructions(tmp_state->instructions));
+		write(1, "lol\n", 4);
+		if (count_instructions(tmp_state->instructions) < count_instructions(new_state->instructions))
+			new_state = tmp_state;
+		tmp_state = tmp_state->next;
+	}
+	exit(0);
+	if (new_state->instructions)
+	{
+		execute_instructions(new_state->instructions, stack_a, stack_b);
+		tmp = *instr;
+		while (tmp->next)
+			tmp = tmp->next;
+		tmp->next = copy_instructions(new_state->instructions);
+		((t_instruction *)tmp->next)->prev = tmp;
+	}
+	free_states(&states);
 	bruteforce_order_a(stack_a, stack_b, instr);
 	if (stack_b->size > 1)
 		align_stack_b(stack_a, stack_b, instr);
@@ -257,6 +307,7 @@ stack_a->array[0] < stack_a->array[stack_a->size - 1]))
 			tmp = add_instruction(instr, "rra");
 		execute_instructions(tmp, stack_a, stack_b);
 	}
+
 	align_stack_a(stack_a, stack_b, instr);
 }
 

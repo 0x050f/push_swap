@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/12 17:27:39 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/19 16:28:11 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,19 @@ void			print_instructions(t_instruction *instr)
 		write(STDOUT_FILENO, "\n", 1);
 		instr = instr->next;
 	}
+}
+
+size_t			count_instructions(t_instruction *instr)
+{
+	size_t nb;
+
+	nb = 0;
+	while (instr)
+	{
+		nb++;
+		instr = instr->next;
+	}
+	return (nb);
 }
 
 /*
