@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/20 10:06:07 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/20 10:37:48 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -231,10 +231,10 @@ t_instruction **instr)
 	int		k;
 
 	new_state = states;
-	i = -(stack_a->size / 100);
-	while (stack_a->size != 5 && i < (int)(stack_a->size / 100))
+	i = -5;
+	while (stack_a->size != 5 && i < 5)
 	{
-		if (i == -(stack_a->size / 100))
+		if (i == -10)
 			new_state = new_state_instruction(&states, states, "pb");
 		else if (i < 0)
 		{
@@ -260,76 +260,37 @@ t_instruction **instr)
 				k++;
 			}
 		}
-		/*
-		int		j;
-		t_state			*try_state;
-
-		try_state = new_state;
-		j = -(stack_a->size / 100);
-		while (j < (int)(stack_a->size / 100))
+		while (new_state->stack_a->size > 5)
 		{
-			tmp = add_instruction(&new_state->instructions, "pb");
-			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-			if (j < 0 && j != -(stack_a->size / 100))
+			if (can_pb(new_state->stack_a, new_state->stack_b))
+				tmp = add_instruction(&new_state->instructions, "pb");
+			else
 			{
-				new_state = new_state_instruction(&states, try_state, "ra");
-				k = 0;
-				while (k > j)
-				{
-					tmp = add_instruction(&new_state->instructions, "ra");
-					execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-					k--;
-				}
-			}
-			else if (!j)
-			{
-				new_state = new_state_instruction(&states, try_state, "rra");
-			}
-			else if (j > 0)
-			{
-				new_state = new_state_instruction(&states, try_state, "rra");
-				k = 0;
-				while (k < j)
-				{
-					tmp = add_instruction(&new_state->instructions, "rra");
-					execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-					k++;
-				}
-			}
-		*/
-			while (new_state->stack_a->size > 5)
-			{
-				if (can_pb(new_state->stack_a, new_state->stack_b))
-					tmp = add_instruction(&new_state->instructions, "pb");
+				mvt[0] = closer_pos_to_inf(new_state->stack_a->array[0], new_state->stack_b);
+				min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], new_state->stack_a, new_state->stack_b);
+				min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], new_state->stack_a, new_state->stack_b);
+				if (mvt[0] > new_state->stack_b->size / 2)
+					mvt[1] = new_state->stack_b->size - mvt[0];
 				else
+					mvt[1] = mvt[0];
+				if (new_state->stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
 				{
-					mvt[0] = closer_pos_to_inf(new_state->stack_a->array[0], new_state->stack_b);
-					min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], new_state->stack_a, new_state->stack_b);
-					min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], new_state->stack_a, new_state->stack_b);
-					if (mvt[0] > new_state->stack_b->size / 2)
-						mvt[1] = new_state->stack_b->size - mvt[0];
+					if (min[0] <= min[1] && min_mvt[0] <= new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "rr");
+					else if (min[0] < min[1] && min_mvt[0] > new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "ra");
+					else if (min_mvt[1] > new_state->stack_b->size / 2)
+						tmp = add_instruction(&new_state->instructions, "rrr");
 					else
-						mvt[1] = mvt[0];
-					if (new_state->stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
-					{
-						if (min[0] <= min[1] && min_mvt[0] <= new_state->stack_b->size / 2)
-							tmp = add_instruction(&new_state->instructions, "rr");
-						else if (min[0] < min[1] && min_mvt[0] > new_state->stack_b->size / 2)
-							tmp = add_instruction(&new_state->instructions, "ra");
-						else if (min_mvt[1] > new_state->stack_b->size / 2)
-							tmp = add_instruction(&new_state->instructions, "rrr");
-						else
-							tmp = add_instruction(&new_state->instructions, "rra");
-					}
-					else if (mvt[0] > new_state->stack_b->size / 2)
-						tmp = add_instruction(&new_state->instructions, "rrb");
-					else
-						tmp = add_instruction(&new_state->instructions, "rb");
+						tmp = add_instruction(&new_state->instructions, "rra");
 				}
-				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
+				else if (mvt[0] > new_state->stack_b->size / 2)
+					tmp = add_instruction(&new_state->instructions, "rrb");
+				else
+					tmp = add_instruction(&new_state->instructions, "rb");
 			}
-		//	j++;
-		//}
+			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
+		}
 		i++;
 	}
 	t_state		*tmp_state;
