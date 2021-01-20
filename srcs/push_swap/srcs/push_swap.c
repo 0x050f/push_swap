@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/20 10:37:48 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/20 11:52:57 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -207,6 +207,46 @@ stack_b->array[i] > stack_b->array[i + 1])
 	return (0);
 }
 
+void			create_states_resolution(t_state	**states)
+{
+	int				i;
+	int				k;
+	t_instruction	*tmp;
+	t_state			*new_state;
+
+	i = -5;
+	while (i < 5)
+	{
+		if (i == -10)
+			new_state = new_state_instruction(states, *states, "pb");
+		else if (i < 0)
+		{
+			new_state = new_state_instruction(states, *states, "ra");
+			k = 0;
+			while (k > i)
+			{
+				tmp = add_instruction(&new_state->instructions, "ra");
+				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
+				k--;
+			}
+		}
+		else if (!i)
+			new_state = new_state_instruction(states, *states, "rra");
+		else if (i > 0)
+		{
+			new_state = new_state_instruction(states, *states, "rra");
+			k = 0;
+			while (k < i)
+			{
+				tmp = add_instruction(&new_state->instructions, "rra");
+				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
+				k++;
+			}
+		}
+		i++;
+	}
+}
+
 void			resolve(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
@@ -227,39 +267,15 @@ t_instruction **instr)
 	states->instructions = NULL;
 	states->next = NULL;
 
-	int		i;
-	int		k;
-
-	new_state = states;
-	i = -5;
-	while (stack_a->size != 5 && i < 5)
+	if (stack_a->size > 5)
 	{
-		if (i == -10)
-			new_state = new_state_instruction(&states, states, "pb");
-		else if (i < 0)
-		{
-			new_state = new_state_instruction(&states, states, "ra");
-			k = 0;
-			while (k > i)
-			{
-				tmp = add_instruction(&new_state->instructions, "ra");
-				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-				k--;
-			}
-		}
-		else if (!i)
-			new_state = new_state_instruction(&states, states, "rra");
-		else if (i > 0)
-		{
-			new_state = new_state_instruction(&states, states, "rra");
-			k = 0;
-			while (k < i)
-			{
-				tmp = add_instruction(&new_state->instructions, "rra");
-				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-				k++;
-			}
-		}
+		create_states_resolution(&states);
+		new_state = states->next;
+	}
+	else
+		new_state = states;
+	while (new_state)
+	{
 		while (new_state->stack_a->size > 5)
 		{
 			if (can_pb(new_state->stack_a, new_state->stack_b))
@@ -291,7 +307,7 @@ t_instruction **instr)
 			}
 			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
-		i++;
+		new_state = new_state->next;
 	}
 	t_state		*tmp_state;
 
