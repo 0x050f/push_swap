@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/19 16:25:08 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 11:27:43 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # ifndef DEBUG
 #	define DEBUG 0
 # endif
+
+# define DEPTH		5
 
 # define ASC		0
 # define DESC		1
@@ -66,10 +68,11 @@ void				swap_stack(t_stack *stack);
 
 int					is_stack_ordered(t_stack *stack, int order);
 int					stack_contains(t_stack *stack, int num);
-void				free_stack(t_stack *stack); // UNUSED
-t_stack				*copy_stack(t_stack *stack); // UNUSED
+void				free_stack(t_stack *stack);
+t_stack				*copy_stack(t_stack *stack);
 int					init_stacks(int argc, char *argv[],
 t_stack *stack_a, t_stack *stack_b);
+t_stack				*new_empty_stack(size_t max_size);
 
 /*
 ** instructions.c
@@ -79,8 +82,11 @@ void				print_instructions(t_instruction *instr);
 size_t				count_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
-t_instruction		*add_instruction(t_instruction **instructions, char *line);
+void				free_instructions(t_instruction *instructions);
 t_instruction		*copy_instructions(t_instruction *instructions);
+t_instruction		*add_n_instructions(t_instruction **instructions,
+char *line, size_t n);
+t_instruction		*add_instruction(t_instruction **instructions, char *line);
 
 /*
 ** movements.c
@@ -99,8 +105,10 @@ t_stack *stack_a, t_stack *stack_b);
 
 t_state				*new_state_instruction(t_state **states, t_state *old_state,
 char *line);
-void				free_states(t_state **states);
+void				free_states(t_state *states);
 t_state				*add_state(t_state **states, t_state *state_from);
+t_state				*new_empty_state(t_stack *stack_a, t_stack *stack_b,
+size_t max_size);
 
 /*
 ** utils.c

@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/20 11:52:57 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 11:50:13 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,18 +156,8 @@ stack_b->array[i] > stack_b->array[i + 1])
 		else
 			num = i + 1;
 	}
-	
-	if (!(states = malloc(sizeof(t_state))))
+	if (!(states = new_empty_state(stack_a, NULL, stack_a->max_size)))
 		return (1);
-	states->stack_a = copy_stack(stack_a);
-	if (!(states->stack_b = malloc(sizeof(t_stack))))
-		return (1);
-	states->stack_b->array = malloc(sizeof(int) * stack_a->max_size);
-	states->stack_b->max_size = stack_a->max_size;
-	states->stack_b->size = 0;
-	states->last_instr = NULL;
-	states->instructions = NULL;
-	states->next = NULL;
 	result = NULL;
 	while (!result)
 	{
@@ -178,7 +168,7 @@ stack_b->array[i] > stack_b->array[i + 1])
 			bruteforce_choice_a(&new_states, tmp, i, num, stack_b);
 			tmp = tmp->next;
 		}
-		free_states(&states);
+		free_states(states);
 		states = new_states;
 		tmp = states;
 		while (tmp)
@@ -191,7 +181,7 @@ stack_b->array[i] > stack_b->array[i + 1])
 			tmp = tmp->next;
 		}
 	}
-	free_states(&states);
+	free_states(states);
 	execute_instructions(result->instructions, stack_a, stack_b);
 	tmp_instr = *instr;
 	if (tmp_instr)
@@ -203,128 +193,137 @@ stack_b->array[i] > stack_b->array[i + 1])
 	}
 	else
 		*instr = copy_instructions(result->instructions);
-	free_states(&result);
+	free_states(result);
 	return (0);
 }
 
-void			create_states_resolution(t_state	**states)
+int				create_states_resolution(t_state	**states)
 {
 	int				i;
-	int				k;
 	t_instruction	*tmp;
 	t_state			*new_state;
 
-	i = -5;
-	while (i < 5)
+	i = -DEPTH - 1;
+	while (++i < DEPTH)
 	{
-		if (i == -10)
+		if (i == -DEPTH)
 			new_state = new_state_instruction(states, *states, "pb");
 		else if (i < 0)
 		{
 			new_state = new_state_instruction(states, *states, "ra");
-			k = 0;
-			while (k > i)
-			{
-				tmp = add_instruction(&new_state->instructions, "ra");
-				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-				k--;
-			}
+			tmp = add_n_instructions(&new_state->instructions, "ra",
+DEPTH + (i - 1));
+			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
 		else if (!i)
 			new_state = new_state_instruction(states, *states, "rra");
-		else if (i > 0)
+		else if (i >= 0)
 		{
 			new_state = new_state_instruction(states, *states, "rra");
-			k = 0;
-			while (k < i)
-			{
-				tmp = add_instruction(&new_state->instructions, "rra");
-				execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
-				k++;
-			}
-		}
-		i++;
-	}
-}
-
-void			resolve(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr)
-{
-	size_t		mvt[2];
-	size_t		min[2];
-	size_t		min_mvt[2];
-	t_instruction	*tmp;
-
-	t_state			*states;
-	t_state			*new_state;
-	
-	states = malloc(sizeof(t_state));
-	states->stack_a = copy_stack(stack_a);
-	states->stack_b = malloc(sizeof(t_stack));
-	states->stack_b->array = malloc(sizeof(int) * stack_a->max_size);
-	states->stack_b->max_size = stack_a->max_size;
-	states->stack_b->size = 0;
-	states->instructions = NULL;
-	states->next = NULL;
-
-	if (stack_a->size > 5)
-	{
-		create_states_resolution(&states);
-		new_state = states->next;
-	}
-	else
-		new_state = states;
-	while (new_state)
-	{
-		while (new_state->stack_a->size > 5)
-		{
-			if (can_pb(new_state->stack_a, new_state->stack_b))
-				tmp = add_instruction(&new_state->instructions, "pb");
-			else
-			{
-				mvt[0] = closer_pos_to_inf(new_state->stack_a->array[0], new_state->stack_b);
-				min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], new_state->stack_a, new_state->stack_b);
-				min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], new_state->stack_a, new_state->stack_b);
-				if (mvt[0] > new_state->stack_b->size / 2)
-					mvt[1] = new_state->stack_b->size - mvt[0];
-				else
-					mvt[1] = mvt[0];
-				if (new_state->stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
-				{
-					if (min[0] <= min[1] && min_mvt[0] <= new_state->stack_b->size / 2)
-						tmp = add_instruction(&new_state->instructions, "rr");
-					else if (min[0] < min[1] && min_mvt[0] > new_state->stack_b->size / 2)
-						tmp = add_instruction(&new_state->instructions, "ra");
-					else if (min_mvt[1] > new_state->stack_b->size / 2)
-						tmp = add_instruction(&new_state->instructions, "rrr");
-					else
-						tmp = add_instruction(&new_state->instructions, "rra");
-				}
-				else if (mvt[0] > new_state->stack_b->size / 2)
-					tmp = add_instruction(&new_state->instructions, "rrb");
-				else
-					tmp = add_instruction(&new_state->instructions, "rb");
-			}
+			tmp = add_n_instructions(&new_state->instructions, "rra", i - 1);
 			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
-		new_state = new_state->next;
 	}
-	t_state		*tmp_state;
+	return (0);
+}
 
-	new_state = states->next;
-	tmp_state = new_state->next;
+t_instruction		*rotate(t_state *state)
+{
+	t_instruction		*instr;
+	size_t				mvt[2];
+	size_t				min[2];
+	size_t				min_mvt[2];
+
+	mvt[0] = closer_pos_to_inf(state->stack_a->array[0],
+state->stack_b);
+	min[0] = get_less_mvt_at_begin(mvt[0], &min_mvt[0], state->stack_a,
+state->stack_b);
+	min[1] = get_less_mvt_at_end(mvt[0], &min_mvt[1], state->stack_a,
+state->stack_b);
+	if (mvt[0] > state->stack_b->size / 2)
+		mvt[1] = state->stack_b->size - mvt[0];
+	else
+		mvt[1] = mvt[0];
+	if (state->stack_a->size > 1 && (min[0] <= mvt[1] || min[1] <= mvt[1]))
+	{
+		if (min[0] <= min[1] && min_mvt[0] <= state->stack_b->size / 2)
+			instr = add_instruction(&state->instructions, "rr");
+		else if (min[0] < min[1] && min_mvt[0] > state->stack_b->size / 2)
+			instr = add_instruction(&state->instructions, "ra");
+		else if (min_mvt[1] > state->stack_b->size / 2)
+			instr = add_instruction(&state->instructions, "rrr");
+		else
+			instr = add_instruction(&state->instructions, "rra");
+	}
+	else if (mvt[0] > state->stack_b->size / 2)
+		instr = add_instruction(&state->instructions, "rrb");
+	else
+		instr = add_instruction(&state->instructions, "rb");
+	return (instr);
+}
+
+int				resolve(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	t_instruction	*tmp;
+	t_state			*states;
+	t_state			*tmp_state;
+
+	if (!(states = new_empty_state(stack_a, stack_b, stack_a->max_size)))
+	{
+		write(STDERR_FILENO, "Error\n", 6);
+		return (1);
+	}
+	tmp_state = states;
+	if (stack_a->size > 5)
+	{
+		if (create_states_resolution(&states))
+		{
+			write(STDERR_FILENO, "Error\n", 6);
+			return (1);
+		}
+		tmp_state = states->next;
+	}
 	while (tmp_state)
 	{
-		if (count_instructions(tmp_state->instructions) < count_instructions(new_state->instructions))
-			new_state = tmp_state;
+		while (tmp_state->stack_a->size > 5)
+		{
+			if (can_pb(tmp_state->stack_a, tmp_state->stack_b))
+				tmp = add_instruction(&tmp_state->instructions, "pb");
+			else
+				tmp = rotate(tmp_state);
+			if (!tmp)
+			{
+				free_states(states);
+				write(STDERR_FILENO, "Error\n", 6);
+				return (1);
+			}
+			execute_instructions(tmp, tmp_state->stack_a, tmp_state->stack_b);
+		}
 		tmp_state = tmp_state->next;
 	}
-	if (new_state->instructions)
+	t_state		*solution;
+
+	solution = states->next;
+	if (solution)
+		tmp_state = solution->next;
+	else
 	{
-		execute_instructions(new_state->instructions, stack_a, stack_b);
-		*instr = copy_instructions(new_state->instructions);
+		tmp_state = NULL;
+		solution = states;
 	}
-	free_states(&states);
+	while (tmp_state)
+	{
+		if (count_instructions(tmp_state->instructions) < count_instructions(solution->instructions))
+			solution = tmp_state;
+		tmp_state = tmp_state->next;
+	}
+	if (solution->instructions)
+	{
+		execute_instructions(solution->instructions, stack_a, stack_b);
+		*instr = copy_instructions(solution->instructions);
+	}
+	free_states(states);
 	bruteforce_order_a(stack_a, stack_b, instr);
 	if (stack_b->size > 1)
 		align_stack_b(stack_a, stack_b, instr);
@@ -338,8 +337,8 @@ stack_a->array[0] < stack_a->array[stack_a->size - 1]))
 			tmp = add_instruction(instr, "rra");
 		execute_instructions(tmp, stack_a, stack_b);
 	}
-
 	align_stack_a(stack_a, stack_b, instr);
+	return (0);
 }
 
 int				main(int argc, char *argv[])
@@ -355,8 +354,12 @@ int				main(int argc, char *argv[])
 	if (DEBUG)
 		print_stacks(&stack_a, &stack_b);
 	instr = NULL;
-	if (is_stack_ordered(&stack_a, ASC))
-		resolve(&stack_a, &stack_b, &instr);
+	if (is_stack_ordered(&stack_a, ASC) && resolve(&stack_a, &stack_b, &instr))
+	{
+		free_instructions(instr);
+		return (1);
+	}
 	print_instructions(instr);
+	free_instructions(instr);
 	return (0);
 }

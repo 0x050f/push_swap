@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/19 16:28:11 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 11:09:29 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,19 @@ t_stack *stack_a, t_stack *stack_b)
 		print_stacks(stack_a, stack_b);
 }
 
+void			free_instructions(t_instruction *instructions)
+{
+	t_instruction	*next;
+
+	while (instructions)
+	{
+		next = instructions->next;
+		free(instructions->line);
+		free(instructions);
+		instructions = next;
+	}
+}
+
 t_instruction	*copy_instructions(t_instruction *instructions)
 {
 	t_instruction	*new;
@@ -75,10 +88,42 @@ t_instruction	*copy_instructions(t_instruction *instructions)
 	new = NULL;
 	while (instructions)
 	{
-		add_instruction(&new, instructions->line);
+		if (!(add_instruction(&new, instructions->line)))
+		{
+			free_instructions(new);
+			return (NULL);
+		}
 		instructions = instructions->next;
 	}
 	return (new);
+}
+
+/*
+** Add n instructions of line
+*/
+
+t_instruction	*add_n_instructions(t_instruction **instructions, char *line,
+size_t n)
+{
+	t_instruction	*start;
+
+	start = NULL;
+	if (n > 0)
+	{
+		if (!(start = add_instruction(instructions, line)))
+			return (NULL);
+		n--;
+		while (n > 0)
+		{
+			if (!(add_instruction(instructions, line)))
+			{
+				free_instructions(start);
+				return (NULL);
+			}
+			n--;
+		}
+	}
+	return (start);
 }
 
 /*
@@ -92,7 +137,11 @@ t_instruction	*add_instruction(t_instruction **instructions, char *line)
 
 	if (!(new = malloc(sizeof(t_instruction))))
 		return (NULL);
-	new->line = ft_strdup(line);
+	if (!(new->line = ft_strdup(line)))
+	{
+		free(new);
+		return (NULL);
+	}
 	new->prev = NULL;
 	new->next = NULL;
 	tmp = *instructions;

@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/08 15:05:10 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 10:50:09 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char		*ft_strdup(const char *str)
 	while (str[i])
 		i++;
 	if (!(pt = malloc((i + 1) * sizeof(char))))
-		return (0);
+		return (NULL);
 	i = -1;
 	while (str[++i])
 		pt[i] = str[i];

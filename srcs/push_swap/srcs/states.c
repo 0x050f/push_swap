@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 16:31:31 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/19 18:48:34 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 11:28:06 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,20 @@ char *line)
 	return (state);
 }
 
-void		free_states(t_state **states)
+void		free_states(t_state *states)
 {
-	t_instruction	*tmp_instr;
 	t_state			*tmp;
 	t_state			*next;
 	
-	tmp = *states;
+	tmp = states;
 	while (tmp)
 	{
 		next = tmp->next;
 		free_stack(tmp->stack_a);
-		tmp->stack_a = NULL;
 		free_stack(tmp->stack_b);
-		tmp->stack_b = NULL;
-		tmp_instr = tmp->instructions;
-		while (tmp_instr)
-		{
-			tmp->instructions = tmp->instructions->next;
-			free(tmp_instr->line);
-			free(tmp_instr);
-			tmp_instr = tmp->instructions;
-		}
-		tmp->instructions = NULL;
-		tmp->next = NULL;
+		free_instructions(tmp->instructions);
 		tmp = next;
 	}
-	*states = NULL;
 }
 
 t_state		*add_state(t_state **states, t_state *state_from)
@@ -61,11 +48,19 @@ t_state		*add_state(t_state **states, t_state *state_from)
 
 	if (!(new = malloc(sizeof(t_state))))
 		return (NULL);
-	new->stack_a = copy_stack(state_from->stack_a);
-	new->stack_b = copy_stack(state_from->stack_b);
-	new->instructions = copy_instructions(state_from->instructions);
+	new->stack_a = NULL;
+	new->stack_b = NULL;
+	new->instructions = NULL;
 	new->last_instr = NULL;
 	new->next = NULL;
+	if (!(new->stack_a = copy_stack(state_from->stack_a)) ||
+!(new->stack_b = copy_stack(state_from->stack_b)) ||
+(state_from->instructions &&
+!(new->instructions = copy_instructions(state_from->instructions))))
+	{
+		free_states(new);
+		return (NULL);
+	}
 	tmp = *states;
 	while (tmp && tmp->next)
 		tmp = tmp->next;
@@ -74,4 +69,32 @@ t_state		*add_state(t_state **states, t_state *state_from)
 	else
 		*states = new;
 	return (new);
+}
+
+t_state		*new_empty_state(t_stack *stack_a, t_stack *stack_b,
+size_t max_size)
+{
+	t_state		*state;
+
+	if (!(state = malloc(sizeof(t_state))))
+		return (NULL);
+	if (stack_a)
+		state->stack_a = copy_stack(stack_a);
+	else if (!(state->stack_a = new_empty_stack(max_size)))
+	{
+		free(state);
+		return (NULL);	
+	}
+	if (stack_b)
+		state->stack_b = copy_stack(stack_b);
+	else if (!(state->stack_b = new_empty_stack(max_size)))
+	{
+		free_stack(state->stack_a);
+		free(state);
+		return (NULL);
+	}
+	state->instructions = NULL;
+	state->last_instr = NULL;
+	state->next = NULL;
+	return (state);
 }

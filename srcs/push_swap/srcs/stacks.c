@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:18 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/19 18:21:21 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 10:19:55 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,4 +110,20 @@ t_stack *stack_a, t_stack *stack_b)
 		return (1);
 	}
 	return (0);
+}
+
+t_stack			*new_empty_stack(size_t max_size)
+{
+	t_stack		*stack;
+
+	if (!(stack = malloc(sizeof(t_stack))))
+		return (NULL);
+	if (!(stack->array = malloc(sizeof(int) * max_size)))
+	{
+		free(stack);
+		return (NULL);
+	}
+	stack->max_size = max_size;
+	stack->size = 0;
+	return (stack);
 }
