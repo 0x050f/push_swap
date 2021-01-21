@@ -6,13 +6,13 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 14:49:42 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 16:33:54 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void			align_stack_b(t_stack *stack_a, t_stack *stack_b,
+int				align_stack_b(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
 	size_t	i;
@@ -37,11 +37,14 @@ stack_b->array[i] > stack_b->array[i + 1])
 			tmp = add_instruction(instr, "rrb");
 		else
 			tmp = add_instruction(instr, "rb");
+		if (!tmp)
+			return (1);
 		execute_instructions(tmp, stack_a, stack_b);
 	}
+	return (0);
 }
 
-void			align_stack_a(t_stack *stack_a, t_stack *stack_b,
+int				align_stack_a(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr)
 {
 	size_t	i;
@@ -66,12 +69,17 @@ stack_a->array[i] < stack_a->array[i + 1])
 			tmp = add_instruction(instr, "rra");
 		else
 			tmp = add_instruction(instr, "ra");
+		if (!tmp)
+			return (1);
 		execute_instructions(tmp, stack_a, stack_b);
 	}
+	return (0);
 }
 
-void			bruteforce_choice_a(t_state **new_states, t_state *tmp, size_t i, size_t num, t_stack *stack_b)
+void			bruteforce_choice_a(t_state **new_states, t_state *tmp,
+size_t pos[2], t_stack *stack_b)
 {
+	size_t			j;
 	t_instruction	*tmp_instr;
 
 	if (tmp->stack_b->size < 2 && (!tmp->last_instr ||
@@ -95,7 +103,6 @@ ft_strcmp(tmp->last_instr->line, "sa") &&
 ft_strcmp(tmp->last_instr->line, "ss"))))
 		new_state_instruction(new_states, tmp, "ss");
 	tmp_instr = tmp->last_instr;
-	size_t j;
 	j = 0;
 	while (j < tmp->stack_a->size / 2 && tmp_instr && ft_strcmp(tmp_instr->line, "ra"))
 	{
@@ -104,9 +111,9 @@ ft_strcmp(tmp->last_instr->line, "ss"))))
 	}
 	if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "rra") && j < tmp->stack_a->size / 2))
 	{
-		if (i <= stack_b->size / 2 && num && !tmp->stack_b->size)
+		if (pos[0] <= stack_b->size / 2 && pos[1] && !tmp->stack_b->size)
 		{
-			num--;
+			pos[1]--;
 			new_state_instruction(new_states, tmp, "rr");
 		}
 		else
@@ -121,9 +128,9 @@ ft_strcmp(tmp->last_instr->line, "ss"))))
 	}
 	if (!tmp->last_instr || (ft_strcmp(tmp->last_instr->line, "ra") && j < tmp->stack_a->size / 2))
 	{
-		if (i > stack_b->size / 2 && num && !tmp->stack_b->size)
+		if (pos[0] > stack_b->size / 2 && pos[1] && !tmp->stack_b->size)
 		{
-			num--;
+			pos[1]--;
 			new_state_instruction(new_states, tmp, "rrr");
 		}
 		else
@@ -139,22 +146,20 @@ t_instruction **instr)
 	t_state			*states;
 	t_state			*tmp;
 	t_instruction	*tmp_instr;
-	
 
-	size_t	i;
-	size_t	num;
+	size_t	pos[2];
 
-	i = 0;
-	num = 0;
+	pos[0] = 0;
+	pos[1] = 0;
 	if (is_stack_ordered(stack_b, DESC))
 	{
-		while (i < stack_b->size - 1 &&
-stack_b->array[i] > stack_b->array[i + 1])
-			i++;
-		if (i > stack_b->size / 2)
-			num = stack_b->size - (i + 1);
+		while (pos[0] < stack_b->size - 1 &&
+stack_b->array[pos[0]] > stack_b->array[pos[0] + 1])
+			pos[0]++;
+		if (pos[0] > stack_b->size / 2)
+			pos[1] = stack_b->size - (pos[0] + 1);
 		else
-			num = i + 1;
+			pos[1] = pos[0] + 1;
 	}
 	if (!(states = new_empty_state(stack_a, NULL, stack_a->max_size)))
 		return (1);
@@ -165,7 +170,7 @@ stack_b->array[i] > stack_b->array[i + 1])
 		tmp = states;
 		while (tmp)
 		{
-			bruteforce_choice_a(&new_states, tmp, i, num, stack_b);
+			bruteforce_choice_a(&new_states, tmp, pos, stack_b);
 			tmp = tmp->next;
 		}
 		free_states(states);
@@ -281,7 +286,6 @@ int				large_resolve(t_state *states)
 			if (!tmp)
 			{
 				free_states(states);
-				write(STDERR_FILENO, "Error\n", 6);
 				return (1);
 			}
 			execute_instructions(tmp, tmp_state->stack_a, tmp_state->stack_b);
@@ -291,30 +295,11 @@ int				large_resolve(t_state *states)
 	return (0);
 }
 
-int				resolve(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr)
+int				pick_solution(t_state *states, t_stack *stack_a,
+t_stack *stack_b, t_instruction **instr)
 {
-	t_instruction	*tmp;
-	t_state			*states;
+	t_state			*solution;
 	t_state			*tmp_state;
-
-	if (!(states = new_empty_state(stack_a, stack_b, stack_a->max_size)))
-	{
-		write(STDERR_FILENO, "Error\n", 6);
-		return (1);
-	}
-	tmp_state = states;
-	if (stack_a->size > 5)
-	{
-		if (create_states_resolution(&states))
-		{
-			write(STDERR_FILENO, "Error\n", 6);
-			return (1);
-		}
-		if (large_resolve(states))
-			return (1);
-	}
-	t_state		*solution;
 
 	solution = states->next;
 	if (solution)
@@ -333,12 +318,23 @@ t_instruction **instr)
 	if (solution->instructions)
 	{
 		execute_instructions(solution->instructions, stack_a, stack_b);
-		*instr = copy_instructions(solution->instructions);
+		if (!(*instr = copy_instructions(solution->instructions)))
+		{
+			free_states(states);
+			write(STDERR_FILENO, "Error\n", 6);
+			return (1);
+		}
 	}
-	free_states(states);
-	bruteforce_order_a(stack_a, stack_b, instr);
-	if (stack_b->size > 1)
-		align_stack_b(stack_a, stack_b, instr);
+	return (0);
+}
+
+int				realign_and_fill_a(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	t_instruction	*tmp;
+
+	if (stack_b->size > 1 && align_stack_b(stack_a, stack_b, instr))
+		return (1);
 	while (stack_b->size)
 	{
 		if (stack_b->array[0] > stack_a->array[stack_a->size - 1] ||
@@ -347,9 +343,41 @@ stack_a->array[0] < stack_a->array[stack_a->size - 1]))
 			tmp = add_instruction(instr, "pa");
 		else
 			tmp = add_instruction(instr, "rra");
+		if (!tmp)
+			return (1);
 		execute_instructions(tmp, stack_a, stack_b);
 	}
-	align_stack_a(stack_a, stack_b, instr);
+	if (align_stack_a(stack_a, stack_b, instr))
+		return (1);
+	return (0);
+}
+
+int				resolve(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr)
+{
+	t_state			*states;
+
+	if (!(states = new_empty_state(stack_a, stack_b, stack_a->max_size)))
+	{
+		write(STDERR_FILENO, "Error\n", 6);
+		return (1);
+	}
+	if (stack_a->size > 5)
+	{
+		if (create_states_resolution(&states) || large_resolve(states))
+		{
+			write(STDERR_FILENO, "Error\n", 6);
+			return (1);
+		}
+	}
+	pick_solution(states, stack_a, stack_b, instr);
+	free_states(states);
+	bruteforce_order_a(stack_a, stack_b, instr);
+	if (realign_and_fill_a(stack_a, stack_b, instr))
+	{
+		write(STDERR_FILENO, "Error\n", 6);
+		return (1);
+	}
 	return (0);
 }
 
