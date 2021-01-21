@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 11:50:13 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 12:10:12 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,26 +203,28 @@ int				create_states_resolution(t_state	**states)
 	t_instruction	*tmp;
 	t_state			*new_state;
 
-	i = -DEPTH - 1;
+	new_state = new_state_instruction(states, *states, "pb");
+	tmp = NULL;
+	i = -DEPTH + 1;
 	while (++i < DEPTH)
 	{
-		if (i == -DEPTH)
-			new_state = new_state_instruction(states, *states, "pb");
-		else if (i < 0)
+		if (i < 0)
 		{
 			new_state = new_state_instruction(states, *states, "ra");
 			tmp = add_n_instructions(&new_state->instructions, "ra",
 DEPTH + (i - 1));
 			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
-		else if (!i)
-			new_state = new_state_instruction(states, *states, "rra");
-		else if (i >= 0)
+		else if (i > 0)
 		{
 			new_state = new_state_instruction(states, *states, "rra");
 			tmp = add_n_instructions(&new_state->instructions, "rra", i - 1);
 			execute_instructions(tmp, new_state->stack_a, new_state->stack_b);
 		}
+		else if (i != -DEPTH)
+			new_state = new_state_instruction(states, *states, "rra");
+		if (!new_state)
+			return (1);
 	}
 	return (0);
 }
