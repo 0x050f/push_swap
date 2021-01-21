@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 11:27:43 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 14:34:02 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ t_instruction		*add_instruction(t_instruction **instructions, char *line);
 
 int					can_pb(t_stack *stack_a, t_stack *stack_b);
 size_t				closer_pos_to_inf(int nb, t_stack *stack);
-size_t				get_less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
+size_t				less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b);
-size_t				get_less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
+size_t				less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b);
 
 /*

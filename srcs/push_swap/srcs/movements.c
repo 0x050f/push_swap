@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/11 11:58:17 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/11 15:45:24 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/21 14:33:56 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ size_t			closer_pos_to_inf(int nb, t_stack *stack)
 ** movement needed to store in stack_b
 */
 
-size_t			get_less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
+size_t			less_mvt_at_begin(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b)
 {
 	size_t		i;
@@ -119,7 +119,7 @@ t_stack *stack_a, t_stack *stack_b)
 ** movement needed to store in stack_b
 */
 
-size_t			get_less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
+size_t			less_mvt_at_end(size_t minimal_mvt, size_t *min_mvt,
 t_stack *stack_a, t_stack *stack_b)
 {
 	size_t		i;
