@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 16:31:31 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 11:28:06 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 09:25:04 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,13 @@ char *line)
 	t_state			*state;
 	t_instruction	*instr;
 
-	state = add_state(states, old_state);
-	instr = add_instruction(&state->instructions, line);
+	if (!(state = add_state(states, old_state)))
+		return (NULL);
+	if (!(instr = add_instruction(&state->instructions, line)))
+	{
+		free_states(state);
+		return (NULL);
+	}
 	state->last_instr = instr;
 	execute_instructions(instr, state->stack_a, state->stack_b);
 	return (state);
