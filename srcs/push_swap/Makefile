@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/23 12:54:54 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/23 15:17:23 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -86,6 +86,7 @@ SRC			=	push_swap.c \
 				bruteforce.c \
 				bruteforce_operations.c \
 				utils.c \
+				cleaner.c \
 				debug.c
 
 SRCS		=	$(SRC)

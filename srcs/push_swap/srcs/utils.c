@@ -6,20 +6,13 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 10:50:09 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:06:32 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-unsigned long		ft_abs(long n)
-{
-	if (n < 0)
-		return (n * -1);
-	return (n);
-}
-
-int			ft_strcmp(const char *s1, const char *s2)
+int				ft_strcmp(const char *s1, const char *s2)
 {
 	int i;
 
@@ -29,7 +22,7 @@ int			ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-char		*ft_strdup(const char *str)
+char			*ft_strdup(const char *str)
 {
 	int		i;
 	char	*pt;
@@ -46,7 +39,7 @@ char		*ft_strdup(const char *str)
 	return (pt);
 }
 
-size_t		ft_strlen(const char *s)
+size_t			ft_strlen(const char *s)
 {
 	const char *ptr;
 
@@ -56,7 +49,7 @@ size_t		ft_strlen(const char *s)
 	return (ptr - s);
 }
 
-void		ft_putnbr(int n)
+void			ft_putnbr(int n)
 {
 	char c;
 	long nnbr;
@@ -83,7 +76,7 @@ void		ft_putnbr(int n)
 ** an error (not a number or not a integer)
 */
 
-int			ft_atoi(const char *str, int *num)
+int				ft_atoi(const char *str, int *num)
 {
 	char	*ptr;
 	long	nbr;

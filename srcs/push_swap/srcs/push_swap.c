@@ -6,11 +6,24 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:55:50 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:11:34 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
+
+size_t			count_instructions(t_instruction *instr)
+{
+	size_t nb;
+
+	nb = 0;
+	while (instr)
+	{
+		nb++;
+		instr = instr->next;
+	}
+	return (nb);
+}
 
 int				pick_solution(t_state *states, t_stack *stack_a,
 t_stack *stack_b, t_instruction **instr)
@@ -18,19 +31,17 @@ t_stack *stack_b, t_instruction **instr)
 	t_state			*solution;
 	t_state			*tmp_state;
 
-	solution = states->next;
-	tmp_state = NULL;
-	if (solution)
-		tmp_state = solution->next;
-	else
-		solution = states;
+	solution = NULL;
+	tmp_state = states->next;
 	while (tmp_state)
 	{
-		if (count_instructions(tmp_state->instructions) <
+		if (!solution || count_instructions(tmp_state->instructions) <
 count_instructions(solution->instructions))
 			solution = tmp_state;
 		tmp_state = tmp_state->next;
 	}
+	if (!solution)
+		solution = states;
 	if (solution->instructions)
 	{
 		execute_instructions(solution->instructions, stack_a, stack_b);
@@ -106,7 +117,12 @@ int				main(int argc, char *argv[])
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
-	print_instructions(instr);
+	while (instr)
+	{
+		write(STDOUT_FILENO, instr->line, ft_strlen(instr->line));
+		write(STDOUT_FILENO, "\n", 1);
+		instr = instr->next;
+	}
 	free_instructions(instr);
 	return (0);
 }

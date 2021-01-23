@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:18 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 10:19:55 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:15:28 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,10 @@ int				stack_contains(t_stack *stack, int num)
 	return (0);
 }
 
-void			free_stack(t_stack *stack)
-{
-	free(stack->array);
-	free(stack);
-}
-
 /*
 ** Copy a stack
 */
+
 t_stack			*copy_stack(t_stack *stack)
 {
 	size_t		i;
@@ -99,11 +94,8 @@ t_stack *stack_a, t_stack *stack_b)
 	stack_b->size = 0;
 	i = 1;
 	while (i < (size_t)argc && !(ft_atoi(argv[i], &num)) &&
-!(stack_contains(stack_a, num)))
-	{
+!(stack_contains(stack_a, num)) && ++stack_a->size)
 		stack_a->array[i++ - 1] = num;
-		stack_a->size++;
-	}
 	if (i != (size_t)argc)
 	{
 		write(STDERR_FILENO, "Error\n", 6);

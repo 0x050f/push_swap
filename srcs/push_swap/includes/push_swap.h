@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:56:42 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:17:13 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # define _GREEN		"\x1b[32m"
 
 # ifndef DEBUG
-#	define DEBUG 0
+#  define DEBUG 0
 # endif
 
 # define DEPTH		5
@@ -68,7 +68,6 @@ void				swap_stack(t_stack *stack);
 
 int					is_stack_ordered(t_stack *stack, int order);
 int					stack_contains(t_stack *stack, int num);
-void				free_stack(t_stack *stack);
 t_stack				*copy_stack(t_stack *stack);
 int					init_stacks(int argc, char *argv[],
 t_stack *stack_a, t_stack *stack_b);
@@ -77,23 +76,20 @@ t_stack				*new_empty_stack(size_t max_size);
 /*
 ** align_stacks.c
 */
-void			calcul_align_a(size_t *pos, size_t *mvt, t_stack *stack_a,
+void				calcul_align_a(size_t *pos, size_t *mvt, t_stack *stack_a,
 t_stack *stack_b);
-void			calcul_align_b(size_t *pos, size_t *mvt, t_stack *stack_b);
-int				align_stack_a(t_stack *stack_a, t_stack *stack_b,
+void				calcul_align_b(size_t *pos, size_t *mvt, t_stack *stack_b);
+int					align_stack_a(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr);
-int				align_stack_b(t_stack *stack_a, t_stack *stack_b,
+int					align_stack_b(t_stack *stack_a, t_stack *stack_b,
 t_instruction **instr);
 
 /*
 ** instructions.c
 */
 
-void				print_instructions(t_instruction *instr);
-size_t				count_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
-void				free_instructions(t_instruction *instructions);
 t_instruction		*copy_and_concat_instructions(t_instruction **instr,
 t_instruction *new);
 t_instruction		*copy_instructions(t_instruction *instructions);
@@ -136,7 +132,8 @@ int					large_resolve(t_state *states);
 ** bruteforce.c
 */
 
-int					check_bruteforce_solution(t_state *states, t_state **result);
+int					check_bruteforce_solution(t_state *states,
+t_state **result);
 t_state				*pick_bruteforce_solution(t_state	*states, size_t pos[2],
 t_stack *stack_b);
 int					bruteforce_order_a(t_stack *stack_a, t_stack *stack_b,
@@ -157,14 +154,23 @@ size_t pos[2], t_stack *stack_b);
 ** utils.c
 */
 
-unsigned long		ft_abs(long n);
 int					ft_strcmp(const char *s1, const char *s2);
 char				*ft_strdup(const char *str);
 size_t				ft_strlen(const char *s);
 void				ft_putnbr(int n);
 int					ft_atoi(const char *str, int *num);
 
-// DEBUG
+/*
+** cleaner.c
+*/
+
+void				free_instructions(t_instruction *instructions);
+void				free_stack(t_stack *stack);
+
+/*
+** debug.c
+*/
+
 void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 
 #endif

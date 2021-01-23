@@ -6,34 +6,11 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:49:03 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:16:32 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
-
-void			print_instructions(t_instruction *instr)
-{
-	while (instr)
-	{
-		write(STDOUT_FILENO, instr->line, ft_strlen(instr->line));
-		write(STDOUT_FILENO, "\n", 1);
-		instr = instr->next;
-	}
-}
-
-size_t			count_instructions(t_instruction *instr)
-{
-	size_t nb;
-
-	nb = 0;
-	while (instr)
-	{
-		nb++;
-		instr = instr->next;
-	}
-	return (nb);
-}
 
 /*
 ** Choose that to do
@@ -42,8 +19,6 @@ size_t			count_instructions(t_instruction *instr)
 void			execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b)
 {
-	if (DEBUG)
-		print_instructions(instr);
 	while (instr)
 	{
 		if (!ft_strcmp(instr->line, "sa") || !ft_strcmp(instr->line, "ss"))
@@ -68,20 +43,7 @@ t_stack *stack_a, t_stack *stack_b)
 		print_stacks(stack_a, stack_b);
 }
 
-void			free_instructions(t_instruction *instructions)
-{
-	t_instruction	*next;
-
-	while (instructions)
-	{
-		next = instructions->next;
-		free(instructions->line);
-		free(instructions);
-		instructions = next;
-	}
-}
-
-t_instruction		*copy_and_concat_instructions(t_instruction **instr,
+t_instruction	*copy_and_concat_instructions(t_instruction **instr,
 t_instruction *new)
 {
 	t_instruction	*ptr;
@@ -108,7 +70,7 @@ t_instruction *new)
 t_instruction	*copy_instructions(t_instruction *instructions)
 {
 	t_instruction	*new;
-	
+
 	new = NULL;
 	while (instructions)
 	{

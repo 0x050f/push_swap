@@ -6,13 +6,13 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 12:54:43 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:55:46 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 15:04:51 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int				create_states_resolution(t_state	**states)
+int					create_states_resolution(t_state **states)
 {
 	int				i;
 	t_instruction	*tmp;
@@ -79,7 +79,7 @@ t_instruction		*rotate(t_state *stt)
 	return (instr);
 }
 
-int				large_resolve(t_state *states)
+int					large_resolve(t_state *states)
 {
 	t_instruction	*tmp;
 	t_state			*tmp_state;
