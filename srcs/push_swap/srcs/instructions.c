@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 11:09:29 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 12:49:03 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,30 @@ void			free_instructions(t_instruction *instructions)
 		free(instructions);
 		instructions = next;
 	}
+}
+
+t_instruction		*copy_and_concat_instructions(t_instruction **instr,
+t_instruction *new)
+{
+	t_instruction	*ptr;
+	t_instruction	*tmp_instr;
+
+	tmp_instr = *instr;
+	if (tmp_instr)
+	{
+		while (tmp_instr->next)
+			tmp_instr = tmp_instr->next;
+		if (!(tmp_instr->next = copy_instructions(new)))
+			return (NULL);
+		ptr = tmp_instr->next;
+		((t_instruction *)tmp_instr->next)->prev = tmp_instr;
+	}
+	else
+	{
+		*instr = copy_instructions(new);
+		ptr = *instr;
+	}
+	return (ptr);
 }
 
 t_instruction	*copy_instructions(t_instruction *instructions)

@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/21 14:34:02 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/23 12:56:42 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,17 @@ t_stack *stack_a, t_stack *stack_b);
 t_stack				*new_empty_stack(size_t max_size);
 
 /*
+** align_stacks.c
+*/
+void			calcul_align_a(size_t *pos, size_t *mvt, t_stack *stack_a,
+t_stack *stack_b);
+void			calcul_align_b(size_t *pos, size_t *mvt, t_stack *stack_b);
+int				align_stack_a(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr);
+int				align_stack_b(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr);
+
+/*
 ** instructions.c
 */
 
@@ -83,6 +94,8 @@ size_t				count_instructions(t_instruction *instr);
 void				execute_instructions(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
 void				free_instructions(t_instruction *instructions);
+t_instruction		*copy_and_concat_instructions(t_instruction **instr,
+t_instruction *new);
 t_instruction		*copy_instructions(t_instruction *instructions);
 t_instruction		*add_n_instructions(t_instruction **instructions,
 char *line, size_t n);
@@ -109,6 +122,36 @@ void				free_states(t_state *states);
 t_state				*add_state(t_state **states, t_state *state_from);
 t_state				*new_empty_state(t_stack *stack_a, t_stack *stack_b,
 size_t max_size);
+
+/*
+** resolution.c
+*/
+
+int					create_states_resolution(t_state	**states);
+t_instruction		*rotate_a(t_state *stt, size_t min[2], size_t min_mvt[2]);
+t_instruction		*rotate(t_state *stt);
+int					large_resolve(t_state *states);
+
+/*
+** bruteforce.c
+*/
+
+int					check_bruteforce_solution(t_state *states, t_state **result);
+t_state				*pick_bruteforce_solution(t_state	*states, size_t pos[2],
+t_stack *stack_b);
+int					bruteforce_order_a(t_stack *stack_a, t_stack *stack_b,
+t_instruction **instr);
+
+/*
+** bruteforce_operations.c
+*/
+
+int					reverse_rotate_bruteforce_a(t_state **new_states,
+t_state *tmp, size_t pos[2], t_stack *stack_b);
+int					rotate_bruteforce_a(t_state **new_states, t_state *tmp,
+size_t pos[2], t_stack *stack_b);
+int					bruteforce_choice_a(t_state **new_states, t_state *tmp,
+size_t pos[2], t_stack *stack_b);
 
 /*
 ** utils.c
