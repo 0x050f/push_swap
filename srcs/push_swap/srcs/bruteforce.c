@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 12:42:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:57:44 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:21:36 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,23 +55,23 @@ t_stack *stack_b)
 	return (result);
 }
 
-int				bruteforce_order_a(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr)
+int				bruteforce_order_a(t_program *prg)
 {
 	size_t			pos[2];
 	t_state			*result;
 	t_state			*states;
 
-	calcul_align_b(&pos[0], &pos[1], stack_b);
-	if (!(states = new_empty_state(stack_a, NULL, stack_a->max_size)))
+	calcul_align_b(&pos[0], &pos[1], &prg->stack_b);
+	if (!(states = new_empty_state(&prg->stack_a, NULL, prg->stack_a.max_size)))
 		return (1);
-	if (!(result = pick_bruteforce_solution(states, pos, stack_b)))
+	if (!(result = pick_bruteforce_solution(states, pos, &prg->stack_b)))
 	{
 		free_states(states);
 		return (1);
 	}
-	execute_instructions(result->instructions, stack_a, stack_b);
-	if (!copy_and_concat_instructions(instr, result->instructions))
+	execute_instructions(result->instructions, &prg->stack_a, &prg->stack_b,
+prg->debug);
+	if (!copy_and_concat_instructions(&prg->instr, result->instructions))
 	{
 		free_states(result);
 		return (1);

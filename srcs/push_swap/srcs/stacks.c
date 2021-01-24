@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:57:18 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 15:15:28 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:37:25 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,20 +82,20 @@ t_stack *stack_a, t_stack *stack_b)
 	size_t		i;
 	int			num;
 
-	if (!(stack_a->array = malloc(sizeof(int) * (argc - 1))) ||
-!(stack_b->array = malloc(sizeof(int) * (argc - 1))))
+	if (!(stack_a->array = malloc(sizeof(int) * (argc))) ||
+!(stack_b->array = malloc(sizeof(int) * (argc))))
 	{
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
-	stack_a->max_size = argc - 1;
-	stack_b->max_size = argc - 1;
+	stack_a->max_size = argc;
+	stack_b->max_size = argc;
 	stack_a->size = 0;
 	stack_b->size = 0;
-	i = 1;
+	i = 0;
 	while (i < (size_t)argc && !(ft_atoi(argv[i], &num)) &&
 !(stack_contains(stack_a, num)) && ++stack_a->size)
-		stack_a->array[i++ - 1] = num;
+		stack_a->array[++i - 1] = num;
 	if (i != (size_t)argc)
 	{
 		write(STDERR_FILENO, "Error\n", 6);

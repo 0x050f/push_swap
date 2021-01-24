@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 12:54:43 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 15:04:51 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:24:46 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int					create_states_resolution(t_state **states)
 			new = new_state_instruction(states, *states, "rra");
 			tmp = add_n_instructions(&new->instructions, "rra", i - 1);
 		}
-		execute_instructions(tmp, new->stack_a, new->stack_b);
+		execute_instructions(tmp, new->stack_a, new->stack_b, 0);
 		if (!new || (!tmp && i && i != -DEPTH && i != 1))
 			return (1);
 	}
@@ -98,7 +98,8 @@ int					large_resolve(t_state *states)
 				free_states(states);
 				return (1);
 			}
-			execute_instructions(tmp, tmp_state->stack_a, tmp_state->stack_b);
+			execute_instructions(tmp, tmp_state->stack_a,
+tmp_state->stack_b, 0);
 		}
 		tmp_state = tmp_state->next;
 	}

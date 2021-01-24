@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/12 16:31:31 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 15:04:04 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:23:55 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char *line)
 		return (NULL);
 	}
 	state->last_instr = instr;
-	execute_instructions(instr, state->stack_a, state->stack_b);
+	execute_instructions(instr, state->stack_a, state->stack_b, 0);
 	return (state);
 }
 

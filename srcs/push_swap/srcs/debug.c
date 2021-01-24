@@ -6,18 +6,23 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:36:10 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 11:06:48 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:15:41 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
+void			print_instruction(t_instruction *instr)
+{
+	write(STDOUT_FILENO, instr->line, ft_strlen(instr->line));
+	write(STDOUT_FILENO, "\n", 1);
+}
+
 void			print_instructions(t_instruction *instr)
 {
 	while (instr)
 	{
-		write(STDOUT_FILENO, instr->line, ft_strlen(instr->line));
-		write(STDOUT_FILENO, "\n", 1);
+		print_instruction(instr);
 		instr = instr->next;
 	}
 }

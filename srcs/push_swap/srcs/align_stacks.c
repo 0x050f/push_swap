@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 12:37:08 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 12:58:10 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:23:21 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,23 +59,22 @@ stack_b->array[*pos] > stack_b->array[*pos + 1])
 ** align stack a in order to get final solution
 */
 
-int				align_stack_a(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr)
+int				align_stack_a(t_program *prg)
 {
 	size_t			i;
 	size_t			num;
 	t_instruction	*tmp;
 
-	calcul_align_a(&i, &num, stack_a, stack_b);
+	calcul_align_a(&i, &num, &prg->stack_a, &prg->stack_b);
 	while (num--)
 	{
-		if (i > stack_b->size / 2)
-			tmp = add_instruction(instr, "rra");
+		if (i > prg->stack_b.size / 2)
+			tmp = add_instruction(&prg->instr, "rra");
 		else
-			tmp = add_instruction(instr, "ra");
+			tmp = add_instruction(&prg->instr, "ra");
 		if (!tmp)
 			return (1);
-		execute_instructions(tmp, stack_a, stack_b);
+		execute_instructions(tmp, &prg->stack_a, &prg->stack_b, prg->debug);
 	}
 	return (0);
 }
@@ -84,23 +83,22 @@ t_instruction **instr)
 ** align stack b to fill stack_a
 */
 
-int				align_stack_b(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr)
+int				align_stack_b(t_program *prg)
 {
 	size_t			i;
 	size_t			num;
 	t_instruction	*tmp;
 
-	calcul_align_b(&i, &num, stack_b);
+	calcul_align_b(&i, &num, &prg->stack_b);
 	while (num--)
 	{
-		if (i > stack_b->size / 2)
-			tmp = add_instruction(instr, "rrb");
+		if (i > prg->stack_b.size / 2)
+			tmp = add_instruction(&prg->instr, "rrb");
 		else
-			tmp = add_instruction(instr, "rb");
+			tmp = add_instruction(&prg->instr, "rb");
 		if (!tmp)
 			return (1);
-		execute_instructions(tmp, stack_a, stack_b);
+		execute_instructions(tmp, &prg->stack_a, &prg->stack_b, prg->debug);
 	}
 	return (0);
 }

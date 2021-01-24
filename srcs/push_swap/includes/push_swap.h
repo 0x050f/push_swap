@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 11:07:06 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:20:54 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,14 @@ typedef struct		s_state
 	void			*next;
 }					t_state;
 
+typedef struct		s_program
+{
+	t_stack			stack_a;
+	t_stack			stack_b;
+	t_instruction	*instr;
+	int				debug;
+}					t_program;
+
 /*
 ** operations.c
 */
@@ -79,17 +87,15 @@ t_stack				*new_empty_stack(size_t max_size);
 void				calcul_align_a(size_t *pos, size_t *mvt, t_stack *stack_a,
 t_stack *stack_b);
 void				calcul_align_b(size_t *pos, size_t *mvt, t_stack *stack_b);
-int					align_stack_a(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr);
-int					align_stack_b(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr);
+int					align_stack_a(t_program *prg);
+int					align_stack_b(t_program *prg);
 
 /*
 ** instructions.c
 */
 
-void				execute_instructions(t_instruction *instr,
-t_stack *stack_a, t_stack *stack_b);
+void				execute_instructions(t_instruction *instr, t_stack *stack_a,
+t_stack *stack_b, int debug);
 t_instruction		*copy_and_concat_instructions(t_instruction **instr,
 t_instruction *new);
 t_instruction		*copy_instructions(t_instruction *instructions);
@@ -136,8 +142,7 @@ int					check_bruteforce_solution(t_state *states,
 t_state **result);
 t_state				*pick_bruteforce_solution(t_state	*states, size_t pos[2],
 t_stack *stack_b);
-int					bruteforce_order_a(t_stack *stack_a, t_stack *stack_b,
-t_instruction **instr);
+int					bruteforce_order_a(t_program *prg);
 
 /*
 ** bruteforce_operations.c
@@ -171,6 +176,7 @@ void				free_stack(t_stack *stack);
 ** debug.c
 */
 
+void				print_instruction(t_instruction *instr);
 void				print_instructions(t_instruction *instr);
 void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 

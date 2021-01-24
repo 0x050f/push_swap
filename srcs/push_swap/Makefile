@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/24 11:09:46 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/24 12:00:14 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -120,8 +120,8 @@ $(OBJS):		| $(DIR_OBJS)
 
 
 $(DIR_OBJS)%.o: $(DIR_SRCS)%.c
+				@printf "\033[2K\r $(_YELLOW)Compiling $< $(_END)⌛ "
 				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) -c $< -o $@
-				@printf "\033[2K\r $(_YELLOW)Compiling $< $(_END)⌛"
 
 $(DIR_OBJS):
 				@mkdir $(DIR_OBJS)

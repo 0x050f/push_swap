@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 11:06:51 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 12:20:58 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@
 ** Choose that to do
 */
 
-void			execute_instructions(t_instruction *instr,
-t_stack *stack_a, t_stack *stack_b)
+void			execute_instructions(t_instruction *instr, t_stack *stack_a,
+t_stack *stack_b, int debug)
 {
-	if (DEBUG)
-		print_instructions(instr);
 	while (instr)
 	{
+		if (debug)
+			print_instruction(instr);
 		if (!ft_strcmp(instr->line, "sa") || !ft_strcmp(instr->line, "ss"))
 			swap_stack(stack_a);
 		if (!ft_strcmp(instr->line, "sb") || !ft_strcmp(instr->line, "ss"))
@@ -39,10 +39,10 @@ t_stack *stack_a, t_stack *stack_b)
 			reverse_rotate_stack(stack_a);
 		if (!ft_strcmp(instr->line, "rrb") || !ft_strcmp(instr->line, "rrr"))
 			reverse_rotate_stack(stack_b);
+		if (debug)
+			print_stacks(stack_a, stack_b);
 		instr = instr->next;
 	}
-	if (DEBUG)
-		print_stacks(stack_a, stack_b);
 }
 
 t_instruction	*copy_and_concat_instructions(t_instruction **instr,
