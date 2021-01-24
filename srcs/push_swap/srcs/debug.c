@@ -20,7 +20,6 @@ void			write_n_char(int n, char c)
 
 int				size_nbr(int n)
 {
-	char	c;
 	long	nnbr;
 	int		size;
 
@@ -35,7 +34,6 @@ int				size_nbr(int n)
 	{
 		if (nnbr / 10 > 0)
 			size += size_nbr(nnbr / 10);
-		c = nnbr % 10 + 48;
 		size++;
 		return (size);
 	}
