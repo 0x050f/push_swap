@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 12:20:54 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 14:01:27 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,11 +173,19 @@ void				free_instructions(t_instruction *instructions);
 void				free_stack(t_stack *stack);
 
 /*
-** debug.c
+** print.c
 */
 
 void				print_instruction(t_instruction *instr);
 void				print_instructions(t_instruction *instr);
 void				print_stacks(t_stack *stack_a, t_stack *stack_b);
+
+/*
+** debug.c
+*/
+
+void				write_n_char(int n, char c);
+int					size_nbr(int n);
+int					get_max_size_nbr_stack(t_stack *stack);
 
 #endif

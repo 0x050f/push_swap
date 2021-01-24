@@ -6,56 +6,59 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:36:10 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 12:15:41 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 14:02:03 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void			print_instruction(t_instruction *instr)
+void			write_n_char(int n, char c)
 {
-	write(STDOUT_FILENO, instr->line, ft_strlen(instr->line));
-	write(STDOUT_FILENO, "\n", 1);
+	while (n-- > 0)
+		write(STDOUT_FILENO, &c, 1);
 }
 
-void			print_instructions(t_instruction *instr)
+int				size_nbr(int n)
 {
-	while (instr)
+	char	c;
+	long	nnbr;
+	int		size;
+
+	size = 0;
+	nnbr = n;
+	if (nnbr < 0)
 	{
-		print_instruction(instr);
-		instr = instr->next;
+		size = 1;
+		nnbr *= -1;
 	}
+	if (nnbr != 0)
+	{
+		if (nnbr / 10 > 0)
+			size += size_nbr(nnbr / 10);
+		c = nnbr % 10 + 48;
+		size++;
+		return (size);
+	}
+	if (n == 0)
+		size++;
+	return (size);
 }
 
-/*
-** Print both stacks
-*/
-
-void			print_stacks(t_stack *stack_a, t_stack *stack_b)
+int				get_max_size_nbr_stack(t_stack *stack)
 {
+	int		size;
 	size_t	i;
-	size_t	max_size;
 
-	max_size = stack_a->size;
-	if (stack_b->size > stack_a->size)
-		max_size = stack_b->size;
-	write(STDOUT_FILENO, _YELLOW, ft_strlen(_YELLOW));
-	write(STDOUT_FILENO, "stacks\n", 7);
-	write(STDOUT_FILENO, _END, ft_strlen(_END));
-	i = -1;
-	while (++i < max_size)
+	if (!stack->size)
+		size = 1;
+	else
+		size = size_nbr(stack->array[0]);
+	i = 1;
+	while (i < stack->size)
 	{
-		write(STDOUT_FILENO, "	", 1);
-		if ((int)(stack_a->size - max_size + i) >= 0)
-			ft_putnbr(stack_a->array[stack_a->size - max_size + i]);
-		else
-			write(STDOUT_FILENO, " ", 1);
-		write(STDOUT_FILENO, " ", 1);
-		if ((int)(stack_b->size - max_size + i) >= 0)
-			ft_putnbr(stack_b->array[stack_b->size - max_size + i]);
-		else
-			write(STDOUT_FILENO, " ", 1);
-		write(STDOUT_FILENO, "\n", 1);
+		if (size < size_nbr(stack->array[i]))
+			size = size_nbr(stack->array[i]);
+		i++;
 	}
-	write(STDOUT_FILENO, "	_ _\n	a b\n", 10);
+	return (size);
 }
