@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:29:05 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 03:09:49 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 15:30:08 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,14 @@ typedef struct		s_instruction
 	void			*next;
 }					t_instruction;
 
+typedef struct		s_program
+{
+	t_stack			stack_a;
+	t_stack			stack_b;
+	t_instruction	*instr;
+	int				debug;
+}					t_program;
+
 /*
 ** operations.c
 */
@@ -51,7 +59,7 @@ void				swap_stack(t_stack *stack);
 */
 
 void				execute_instructions(t_instruction *instr, t_stack *stack_a,
-t_stack *stack_b);
+t_stack *stack_b, int debug);
 int					add_instruction(t_instruction **intructions, char *line);
 int					get_instruction(t_instruction **instructions);
 
@@ -66,12 +74,19 @@ void				ft_putnbr(int n);
 int					ft_atoi(const char *str, int *num);
 
 /*
-** debug.c
+** print.c
 */
 
 void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 void				print_instructions(t_instruction *instructions);
 void				print_debug_instruction(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
+/*
+** debug.c
+*/
+
+void				write_n_char(int n, char c);
+int					size_nbr(int n);
+int					get_max_size_nbr_stack(t_stack *stack);
 
 #endif

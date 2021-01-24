@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 17:11:04 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 03:01:38 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 15:16:41 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 */
 
 void		execute_instructions(t_instruction *instr,
-t_stack *stack_a, t_stack *stack_b)
+t_stack *stack_a, t_stack *stack_b, int debug)
 {
 	while (instr)
 	{
@@ -37,7 +37,7 @@ t_stack *stack_a, t_stack *stack_b)
 			reverse_rotate_stack(stack_a);
 		if (!ft_strcmp(instr->line, "rrb") || !ft_strcmp(instr->line, "rrr"))
 			reverse_rotate_stack(stack_b);
-		if (DEBUG)
+		if (debug)
 			print_debug_instruction(instr, stack_a, stack_b);
 		instr = instr->next;
 	}

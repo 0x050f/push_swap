@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/24 12:00:28 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/24 15:31:33 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -79,6 +79,7 @@ SRC			=	checker.c \
 				operations.c \
 				instructions.c \
 				utils.c \
+				print.c \
 				debug.c
 
 SRCS		=	$(SRC)
