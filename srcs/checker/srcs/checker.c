@@ -86,10 +86,8 @@ t_stack *stack_a, t_stack *stack_b)
 
 int				init_instructions(t_instruction **instructions)
 {
-	int		errno;
 	int		ret;
 
-	errno = 0;
 	*instructions = NULL;
 	ret = get_instruction(instructions);
 	while (ret > 0)
