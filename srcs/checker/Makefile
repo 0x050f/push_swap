@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/01/05 02:56:09 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/24 11:10:13 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -104,7 +104,7 @@ debug:			all
 $(NAME):		$(OBJS)
 				@printf "\033[2K\r$(_GREEN) All files compiled into '$(DIR_OBJS)'. $(_END)✅\n"
 				@$(CC) $(CC_FLAGS) -I $(DIR_HEADERS) $(OBJS) -o $(NAME)
-				@echo "$(_GREEN) Executable '$(NAME)' created. $(_END)✅"
+				@printf "\033[2K\r$(_GREEN) Executable '$(NAME)' created. $(_END)✅\n"
 
 # COMPILED_SOURCES RULES #
 
@@ -123,11 +123,11 @@ $(DIR_OBJS):
 
 clean:
 				@$(RM) $(DIR_OBJS)
-				@echo "$(_RED) '"$(DIR_OBJS)"' has been deleted. $(_END)🗑️"
+				@printf "\033[2K\r$(_RED) '"$(DIR_OBJS)"' has been deleted. $(_END)🗑️\n"
 
 fclean:			clean
 				@$(RM) $(NAME)
-				@echo "$(_RED) '"$(NAME)"' has been deleted. $(_END)🗑️"
+				@printf "\033[2K\r$(_RED) '"$(NAME)"' has been deleted. $(_END)🗑️\n"
 
 re:				fclean all
 

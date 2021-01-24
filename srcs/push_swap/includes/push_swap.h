@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 15:17:13 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/01/24 11:07:06 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,6 +171,7 @@ void				free_stack(t_stack *stack);
 ** debug.c
 */
 
+void				print_instructions(t_instruction *instr);
 void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 
 #endif

@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2020/12/28 16:10:30 by lmartin          ###   ########.fr        #
+#    Updated: 2021/01/24 11:08:56 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -67,7 +67,7 @@ all:			$(CHECKER) $(PUSH_SWAP)
 # VARIABLES RULES #
 
 $(CHECKER):		
-				@printf	"$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
 				@$(MAKE) -C $(SRCS)/$(CHECKER) MAKEFLAGS=
 				@cp -rf $(SRCS)/$(CHECKER)/$(CHECKER) $(DIR)/$(CHECKER)
 
@@ -79,15 +79,15 @@ $(PUSH_SWAP):
 # OBLIGATORY PART #
 
 clean:
-				@printf	"$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
 				@make clean -C $(SRCS)/$(CHECKER)
-				@printf	"$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
 				@make clean -C $(SRCS)/$(PUSH_SWAP)
 
 fclean:			
-				@printf	"$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
 				@make fclean -C $(SRCS)/$(CHECKER)
-				@printf	"$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
 				@make fclean -C $(SRCS)/$(PUSH_SWAP)
 				@$(RM) $(CHECKER)
 				@$(RM) $(PUSH_SWAP)
@@ -97,9 +97,9 @@ re:				fclean all
 # NORME #
 
 norm:
-				@printf	"$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
 				make norm -C $(SRCS)/$(CHECKER)
-				@printf	"$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
+				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
 				make norm -C $(SRCS)/$(PUSH_SWAP)
 
 # PHONY #
