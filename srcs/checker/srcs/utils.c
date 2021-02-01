@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 01:47:45 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/05 15:59:34 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/01 14:48:40 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,9 +91,9 @@ int			ft_atoi(const char *str, int *num)
 	if (*ptr == '\0')
 		return (1);
 	i = 0;
-	while (*ptr >= '0' && *ptr <= '9' && i++ < 9)
+	while (*ptr >= '0' && *ptr <= '9' && i++ < 10)
 		nbr = nbr * 10 + *ptr++ - '0';
-	if (*ptr != '\0' || nbr > 2147483647 || nbr < -2147483648)
+	if (*ptr != '\0' || nbr * sign > 2147483647 || nbr * sign < -2147483648)
 		return (1);
 	*num = nbr * sign;
 	return (0);
