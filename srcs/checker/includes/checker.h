@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:29:05 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 15:30:08 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/03 00:53:02 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,18 @@ typedef struct		s_program
 }					t_program;
 
 /*
+** checker.c
+*/
+int					stack_contains(t_stack *stack, int num);
+
+/*
+** init_stacks.c
+*/
+
+int					init_stacks(int argc, char *argv[],
+t_stack *stack_a, t_stack *stack_b);
+
+/*
 ** operations.c
 */
 
@@ -82,6 +94,7 @@ void				print_stacks(t_stack *stack_a, t_stack *stack_b);
 void				print_instructions(t_instruction *instructions);
 void				print_debug_instruction(t_instruction *instr,
 t_stack *stack_a, t_stack *stack_b);
+
 /*
 ** debug.c
 */

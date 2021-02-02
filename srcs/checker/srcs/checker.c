@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/02/02 14:43:35 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 17:58:46 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,38 +43,6 @@ int				stack_contains(t_stack *stack, int num)
 	{
 		if (stack->array[i++] == num)
 			return (1);
-	}
-	return (0);
-}
-
-/*
-** Allocate arrays of stacks and initiate stack_a with args
-*/
-
-int				init_stacks(int argc, char *argv[],
-t_stack *stack_a, t_stack *stack_b)
-{
-	size_t		i;
-	int			num;
-
-	if (!(stack_a->array = malloc(sizeof(int) * (argc))) ||
-!(stack_b->array = malloc(sizeof(int) * (argc))))
-	{
-		write(STDERR_FILENO, "Error\n", 6);
-		return (1);
-	}
-	stack_a->size = 0;
-	stack_b->size = 0;
-	i = 0;
-	while (i < (size_t)argc && !(ft_atoi(argv[i], &num)) &&
-!(stack_contains(stack_a, num)) && ++stack_a->size)
-		stack_a->array[i++] = num;
-	if (i != (size_t)argc)
-	{
-		free(stack_a->array);
-		free(stack_b->array);
-		write(STDERR_FILENO, "Error\n", 6);
-		return (1);
 	}
 	return (0);
 }

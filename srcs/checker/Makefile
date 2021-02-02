@@ -6,7 +6,7 @@
 #    By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/12/19 23:21:49 by lmartin           #+#    #+#              #
-#    Updated: 2021/02/02 14:06:53 by lmartin          ###   ########.fr        #
+#    Updated: 2021/02/02 18:01:30 by lmartin          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,6 +75,7 @@ DIR_OBJS	=	./compiled_srcs/
 # FILES #
 
 SRC			=	checker.c \
+				init_stacks.c \
 				operations.c \
 				instructions.c \
 				utils.c \
