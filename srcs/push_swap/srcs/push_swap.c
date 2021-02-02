@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/08 10:41:06 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 12:44:15 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:45:39 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,8 +122,6 @@ int				main(int argc, char *argv[])
 		return (1);
 	}
 	print_instructions(prg.instr);
-	free_instructions(prg.instr);
-	free(prg.stack_a.array);
-	free(prg.stack_b.array);
+	free_prg(&prg);
 	return (0);
 }

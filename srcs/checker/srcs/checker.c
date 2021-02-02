@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 15:33:59 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:43:35 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,12 +107,9 @@ int				main(int argc, char *argv[])
 	if (--argc < 1 || (!ft_strcmp(argv[1], "-v") && argc == 1))
 		return (0);
 	prg.debug = 0;
-	if (!ft_strcmp(argv[1], "-v"))
-	{
-		prg.debug = 1;
-		if (init_stacks(--argc, &argv[2], &prg.stack_a, &prg.stack_b))
-			return (1);
-	}
+	if (!ft_strcmp(argv[1], "-v") && (prg.debug = 1) &&
+init_stacks(--argc, &argv[2], &prg.stack_a, &prg.stack_b))
+		return (1);
 	else if (init_stacks(argc, &argv[1], &prg.stack_a, &prg.stack_b))
 		return (1);
 	if (init_instructions(&prg.instr))

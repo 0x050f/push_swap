@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/05 07:52:49 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 14:01:27 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:45:22 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,6 +169,7 @@ int					ft_atoi(const char *str, int *num);
 ** cleaner.c
 */
 
+void				free_prg(t_program *prg);
 void				free_instructions(t_instruction *instructions);
 void				free_stack(t_stack *stack);
 

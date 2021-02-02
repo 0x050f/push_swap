@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 12:42:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/24 12:21:36 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:42:10 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ t_stack *stack_b)
 			if (bruteforce_choice_a(&new_states, tmp, pos, stack_b))
 			{
 				free_states(new_states);
-				free_states(states);
 				return (NULL);
 			}
 			tmp = tmp->next;
@@ -54,10 +53,7 @@ t_stack *stack_b)
 		free_states(states);
 		states = new_states;
 		if (check_bruteforce_solution(states, &result))
-		{
-			free_states(states);
 			return (NULL);
-		}
 	}
 	free_states(states);
 	return (result);

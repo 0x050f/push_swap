@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/23 15:14:58 by lmartin           #+#    #+#             */
-/*   Updated: 2021/01/23 15:17:41 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/02 14:45:49 by lmartin          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,4 +29,11 @@ void			free_stack(t_stack *stack)
 {
 	free(stack->array);
 	free(stack);
+}
+
+void			free_prg(t_program *prg)
+{
+	free_instructions(prg->instr);
+	free(prg->stack_a.array);
+	free(prg->stack_b.array);
 }
