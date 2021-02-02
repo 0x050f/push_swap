@@ -60,3 +60,11 @@ int				get_max_size_nbr_stack(t_stack *stack)
 	}
 	return (size);
 }
+
+int				free_prg(t_program *prg)
+{
+	free_instructions(prg->instr);
+	free(prg->stack_a.array);
+	free(prg->stack_b.array);
+	return (0);
+}

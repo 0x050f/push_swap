@@ -67,13 +67,12 @@ t_stack *stack_a, t_stack *stack_b)
 	stack_b->size = 0;
 	i = 0;
 	while (i < (size_t)argc && !(ft_atoi(argv[i], &num)) &&
-!(stack_contains(stack_a, num)))
-	{
+!(stack_contains(stack_a, num)) && ++stack_a->size)
 		stack_a->array[i++] = num;
-		stack_a->size++;
-	}
 	if (i != (size_t)argc)
 	{
+		free(stack_a->array);
+		free(stack_b->array);
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
@@ -84,16 +83,18 @@ t_stack *stack_a, t_stack *stack_b)
 ** Read and fill intructions chained list
 */
 
-int				init_instructions(t_instruction **instructions)
+int				init_instructions(t_program *prg)
 {
 	int		ret;
 
-	*instructions = NULL;
-	ret = get_instruction(instructions);
+	prg->instr = NULL;
+	ret = get_instruction(&prg->instr);
 	while (ret > 0)
-		ret = get_instruction(instructions);
+		ret = get_instruction(&prg->instr);
 	if (ret < 0)
 	{
+		free(prg->stack_a.array);
+		free(prg->stack_b.array);
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}
@@ -107,12 +108,15 @@ int				main(int argc, char *argv[])
 	if (--argc < 1 || (!ft_strcmp(argv[1], "-v") && argc == 1))
 		return (0);
 	prg.debug = 0;
-	if (!ft_strcmp(argv[1], "-v") && (prg.debug = 1) &&
+	if (!ft_strcmp(argv[1], "-v"))
+	{
+		if ((prg.debug = 1) &&
 init_stacks(--argc, &argv[2], &prg.stack_a, &prg.stack_b))
-		return (1);
+			return (1);
+	}
 	else if (init_stacks(argc, &argv[1], &prg.stack_a, &prg.stack_b))
 		return (1);
-	if (init_instructions(&prg.instr))
+	if (init_instructions(&prg))
 		return (1);
 	if (prg.debug)
 		print_instructions(prg.instr);
@@ -123,8 +127,5 @@ init_stacks(--argc, &argv[2], &prg.stack_a, &prg.stack_b))
 		write(STDOUT_FILENO, "KO\n", 3);
 	else
 		write(STDOUT_FILENO, "OK\n", 3);
-	free_instructions(prg.instr);
-	free(prg.stack_a.array);
-	free(prg.stack_b.array);
-	return (0);
+	return (free_prg(&prg));
 }

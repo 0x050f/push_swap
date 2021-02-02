@@ -98,6 +98,8 @@ t_stack *stack_a, t_stack *stack_b)
 		stack_a->array[++i - 1] = num;
 	if (i != (size_t)argc)
 	{
+		free(stack_a->array);
+		free(stack_b->array);
 		write(STDERR_FILENO, "Error\n", 6);
 		return (1);
 	}

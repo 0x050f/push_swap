@@ -89,5 +89,6 @@ t_stack *stack_a, t_stack *stack_b);
 void				write_n_char(int n, char c);
 int					size_nbr(int n);
 int					get_max_size_nbr_stack(t_stack *stack);
+int					free_prg(t_program *prg);
 
 #endif
