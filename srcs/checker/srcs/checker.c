@@ -93,6 +93,7 @@ int				init_instructions(t_program *prg)
 		ret = get_instruction(&prg->instr);
 	if (ret < 0)
 	{
+		free_instructions(prg->instr);
 		free(prg->stack_a.array);
 		free(prg->stack_b.array);
 		write(STDERR_FILENO, "Error\n", 6);
