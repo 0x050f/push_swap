@@ -105,7 +105,7 @@ NAME 		=	push_swap
 
 all:			$(NAME)
 
-debug:			DIR_HEADERS += -DDEBUG=1
+debug:			CC_FLAGS += -g3 -fsanitize=address
 debug:			all
 
 # VARIABLES RULES #

@@ -48,6 +48,8 @@ SRCS		=	./srcs
 
 DIR			=	./
 
+DEBUG		=	
+
 # DELETE #
 
 RM			=	rm -rf
@@ -64,16 +66,19 @@ PUSH_SWAP	=	push_swap
 
 all:			$(CHECKER) $(PUSH_SWAP)
 
+debug:			DEBUG += debug
+debug:			all
+
 # VARIABLES RULES #
 
 $(CHECKER):		
 				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(CHECKER) $(_END)\n"
-				@$(MAKE) -C $(SRCS)/$(CHECKER) MAKEFLAGS=
+				@$(MAKE) $(DEBUG) -C $(SRCS)/$(CHECKER) MAKEFLAGS=
 				@cp -rf $(SRCS)/$(CHECKER)/$(CHECKER) $(DIR)/$(CHECKER)
 
 $(PUSH_SWAP):	
 				@printf	"\033[2K\r$(_BLUE)$(_BOLD)$(PUSH_SWAP) $(_END)\n"
-				@$(MAKE) -C $(SRCS)/$(PUSH_SWAP)/ MAKEFLAGS=
+				@$(MAKE) $(DEBUG) -C $(SRCS)/$(PUSH_SWAP)/ MAKEFLAGS=
 				@cp -rf $(SRCS)/$(PUSH_SWAP)/$(PUSH_SWAP) ./$(PUSH_SWAP)
 
 # OBLIGATORY PART #

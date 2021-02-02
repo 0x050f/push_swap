@@ -58,7 +58,6 @@ CC			=	gcc
 
 CC_FLAGS	=	-Wall -Wextra -Werror
 
-
 # DELETE #
 
 RM			=	rm -rf
@@ -97,7 +96,7 @@ NAME 		=	checker
 
 all:			$(NAME)
 
-debug:			DIR_HEADERS += -DDEBUG=1
+debug:			CC_FLAGS += -g3 -fsanitize=address
 debug:			all
 
 # VARIABLES RULES #
