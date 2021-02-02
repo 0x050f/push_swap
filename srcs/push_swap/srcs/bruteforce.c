@@ -19,7 +19,10 @@ int				check_bruteforce_solution(t_state *states, t_state **result)
 		if (!states->stack_b->size && !is_stack_ordered(states->stack_a, ASC))
 		{
 			if (!add_state(result, states))
+			{
+				free_states(states);
 				return (1);
+			}
 		}
 		states = states->next;
 	}
@@ -43,6 +46,7 @@ t_stack *stack_b)
 			if (bruteforce_choice_a(&new_states, tmp, pos, stack_b))
 			{
 				free_states(new_states);
+				free_states(states);
 				return (NULL);
 			}
 			tmp = tmp->next;
@@ -50,8 +54,12 @@ t_stack *stack_b)
 		free_states(states);
 		states = new_states;
 		if (check_bruteforce_solution(states, &result))
+		{
+			free_states(states);
 			return (NULL);
+		}
 	}
+	free_states(states);
 	return (result);
 }
 

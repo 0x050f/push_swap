@@ -58,6 +58,7 @@ void				swap_stack(t_stack *stack);
 ** instructions.c
 */
 
+void				free_instructions(t_instruction *instructions);
 void				execute_instructions(t_instruction *instr, t_stack *stack_a,
 t_stack *stack_b, int debug);
 int					add_instruction(t_instruction **intructions, char *line);

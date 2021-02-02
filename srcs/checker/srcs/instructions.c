@@ -12,6 +12,19 @@
 
 #include "checker.h"
 
+void		free_instructions(t_instruction *instructions)
+{
+	t_instruction	*next;
+
+	while (instructions)
+	{
+		next = instructions->next;
+		free(instructions->line);
+		free(instructions);
+		instructions = next;
+	}
+}
+
 /*
 ** Choose that to do
 */

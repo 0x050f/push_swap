@@ -126,5 +126,8 @@ int				main(int argc, char *argv[])
 		write(STDOUT_FILENO, "KO\n", 3);
 	else
 		write(STDOUT_FILENO, "OK\n", 3);
+	free_instructions(prg.instr);
+	free(prg.stack_a.array);
+	free(prg.stack_b.array);
 	return (0);
 }

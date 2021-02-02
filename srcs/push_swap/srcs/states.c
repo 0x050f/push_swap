@@ -42,6 +42,7 @@ void			free_states(t_state *states)
 		free_stack(tmp->stack_a);
 		free_stack(tmp->stack_b);
 		free_instructions(tmp->instructions);
+		free(tmp);
 		tmp = next;
 	}
 }
