@@ -67,6 +67,22 @@ int			add_instruction(t_instruction **instructions, char *line)
 }
 
 /*
+** set n bytes to 0 of ptr s
+*/
+
+void		ft_bzero(void *s, size_t n)
+{
+	char	*tmp;
+
+	while (n--)
+	{
+		tmp = (char *)s;
+		*tmp = 0;
+		s++;
+	}
+}
+
+/*
 ** Get instruction from STDIN then add_instruction
 ** if no more input is available return 0, return negative number if fail and
 ** positive one otherwise
@@ -77,6 +93,7 @@ int			get_instruction(t_instruction **instructions)
 	int		ret;
 	char	line[4];
 
+	ft_bzero(line, 4);
 	if ((ret = read(STDIN_FILENO, line, 3)) <= 0)
 		return (ret);
 	if (line[2] != '\n')

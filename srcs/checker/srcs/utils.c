@@ -12,6 +12,10 @@
 
 #include "checker.h"
 
+/*
+** return the difference between two strings
+*/
+
 int			ft_strcmp(const char *s1, const char *s2)
 {
 	int i;
@@ -21,6 +25,10 @@ int			ft_strcmp(const char *s1, const char *s2)
 		i++;
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
+
+/*
+** return a copy of str
+*/
 
 char		*ft_strdup(const char *str)
 {
@@ -39,6 +47,10 @@ char		*ft_strdup(const char *str)
 	return (pt);
 }
 
+/*
+** return the length of string s
+*/
+
 size_t		ft_strlen(const char *s)
 {
 	const char *ptr;
@@ -48,6 +60,10 @@ size_t		ft_strlen(const char *s)
 		++ptr;
 	return (ptr - s);
 }
+
+/*
+** write in stdout the nbr n
+*/
 
 void		ft_putnbr(int n)
 {
