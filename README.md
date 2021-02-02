@@ -34,7 +34,9 @@ checker: `./checker 0 2 3 1` then program's waiting for user input
 
 push_swap: `./push_swap 0 2 3 1`
 
-Note: You can also use option `-v` as first parameter to see stacks operations
+Note: You can also use debug option `-v` as first parameter to see stacks operations
+
+![alt text](https://github.com/ska42/push_swap/blob/main/img/option_debug_example.png?raw=true)
 
 ## Tester
 
@@ -43,3 +45,5 @@ There is a bash script named `script.sh` that generate a array of size n and shu
 ```
 ./script.sh size_array [nb_times]
 ```
+
+![alt text](https://github.com/ska42/push_swap/blob/main/img/script_example.png?raw=true)
