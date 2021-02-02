@@ -34,6 +34,8 @@ checker: `./checker 0 2 3 1` then program's waiting for user input
 
 push_swap: `./push_swap 0 2 3 1`
 
+Note: You can also use option `-v` as first parameter to see stacks operations
+
 ## Tester
 
 There is a bash script named `script.sh` that generate a array of size n and shuffle then test `push_swap | checker` x times.
