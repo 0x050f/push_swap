@@ -6,7 +6,7 @@
 /*   By: lmartin <lmartin@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/04 12:28:53 by lmartin           #+#    #+#             */
-/*   Updated: 2021/02/02 17:58:46 by lmartin          ###   ########.fr       */
+/*   Updated: 2021/02/03 10:03:42 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ int				stack_contains(t_stack *stack, int num)
 
 int				init_instructions(t_program *prg)
 {
-	int		ret;
+	int			ret;
+	char		buff[1];
 
 	prg->instr = NULL;
 	ret = get_instruction(&prg->instr);
@@ -61,6 +62,9 @@ int				init_instructions(t_program *prg)
 		ret = get_instruction(&prg->instr);
 	if (ret < 0)
 	{
+		buff[0] = ' ';
+		while (buff[0] && read(STDIN_FILENO, &buff, 1))
+			;
 		free_instructions(prg->instr);
 		free(prg->stack_a.array);
 		free(prg->stack_b.array);
